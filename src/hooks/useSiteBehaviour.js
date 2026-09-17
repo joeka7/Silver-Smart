@@ -8,10 +8,19 @@ const prefersReducedMotion = () =>
  * Rect-based rather than IntersectionObserver so instant jumps and
  * back-navigation still resolve, exactly as the prototype did.
  * Re-runs per route so newly mounted nodes are picked up.
+ *
+ * `in` is applied imperatively here, but some [data-r] nodes also have a
+ * React-controlled className (e.g. .svc-row toggles .act on hover). When React
+ * re-renders such a node it rewrites className from its own vdom, which never
+ * contains `in`, silently stripping it — the element then falls back to
+ * [data-r]{opacity:0} and disappears for good, since it has already been
+ * removed from `items`. A MutationObserver re-asserts `in` on nodes we have
+ * already revealed, so both writers can coexist.
  */
 export function useReveals(deps = []) {
   useEffect(() => {
     let items = [...document.querySelectorAll('[data-r]')]
+    const revealed = new WeakSet()
 
     // stagger groups: assign --dl to each child in document order
     document.querySelectorAll('[data-stagger]').forEach((group) => {
@@ -25,8 +34,11 @@ export function useReveals(deps = []) {
     })
 
     if (prefersReducedMotion()) {
-      items.forEach((el) => el.classList.add('in'))
-      return
+      items.forEach((el) => {
+        revealed.add(el)
+        el.classList.add('in')
+      })
+      return guardRevealed(revealed)
     }
 
     const check = () => {
@@ -34,6 +46,7 @@ export function useReveals(deps = []) {
       for (let i = items.length - 1; i >= 0; i--) {
         const el = items[i]
         if (el.getBoundingClientRect().top < vh * 0.94) {
+          revealed.add(el)
           el.classList.add('in')
           items.splice(i, 1)
         }
@@ -55,15 +68,38 @@ export function useReveals(deps = []) {
     const t1 = setTimeout(check, 0)
     const t2 = setTimeout(check, 120)
 
+    const unguard = guardRevealed(revealed)
+
     return () => {
       removeEventListener('scroll', queue)
       removeEventListener('resize', queue)
       clearTimeout(t1)
       clearTimeout(t2)
       if (raf) cancelAnimationFrame(raf)
+      unguard()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
+}
+
+/**
+ * Re-applies `in` to already-revealed nodes whose className was rewritten by a
+ * React re-render. Watches only the class attribute, and only re-adds a class
+ * the node had already earned, so it cannot reveal anything early.
+ */
+function guardRevealed(revealed) {
+  const mo = new MutationObserver((records) => {
+    for (const rec of records) {
+      const el = rec.target
+      if (revealed.has(el) && !el.classList.contains('in')) el.classList.add('in')
+    }
+  })
+  mo.observe(document.body, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['class'],
+  })
+  return () => mo.disconnect()
 }
 
 /** Nav solid-state past 40px — port of the onScroll toggle in ss.js. */

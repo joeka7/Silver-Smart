@@ -1,0 +1,71 @@
+{
+  "license": "Unsplash License — free for commercial use, no attribution required. https://unsplash.com/license",
+  "note": "Unsplash photos are not model- or property-released. For a production launch, review identifiable buildings/people or replace with licensed or commissioned photography.",
+  "encoding": "Downloaded as JPEG, resized and re-encoded to WebP (Chrome canvas). Originals not retained in-repo.",
+  "images": [
+    {
+      "slot": "Home — hero (.hero-img, portrait 38vw x 72vh)",
+      "file": "src/assets/images/hero-facade-dusk.webp",
+      "dimensions": "1200x1800",
+      "source": "Unsplash",
+      "photoId": "l71vkYSEuyE",
+      "url": "https://unsplash.com/photos/modern-buildings-facade-with-vertical-lines-at-dusk-l71vkYSEuyE",
+      "searchDescription": "modern building facade vertical lines at dusk, warm interior lighting",
+      "rationale": "Portrait orientation matches the tall hero frame. Vertical bronze fins echo the design's own vertical hero rule; warm metal harmonises with brand orange #e8762b against the ink background. Top-weighted crop deliberately excludes a tenant sign visible in the lower-left of the original."
+    },
+    {
+      "slot": "Project Detail — full-bleed hero band (.band-tall)",
+      "file": "src/assets/images/featured-timber-atrium.webp",
+      "dimensions": "1600x1000",
+      "source": "Unsplash",
+      "photoId": "sV9buaOKUQI",
+      "url": "https://unsplash.com/photos/modern-building-facade-with-warm-interior-lighting-at-night-sV9buaOKUQI",
+      "searchDescription": "modern building facade warm interior lighting at night",
+      "rationale": "Dark warm timber-and-glass geometry. Verified against the section's bottom-up dark gradient by compositing the real CSS — white type stays crisp. Amber tones tie to the brand accent. Originally selected for the Home featured band, which no longer exists after the 5-section reduction."
+    },
+    {
+      "slot": "Home — closing CTA background (.end .bg, opacity .5)",
+      "file": "src/assets/images/cta-house-dusk.webp",
+      "dimensions": "1500x1000",
+      "source": "Unsplash",
+      "photoId": "photo-1600585154340-be6161a56a0c",
+      "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+      "searchDescription": "contemporary house at dusk, glazed facade, warm interior light",
+      "rationale": "Matches the slot's own art-direction note ('architecture at dusk'). Subject sits right-of-centre so the left stays calm under the headline, which is what the 100deg dark-left gradient requires. Warm window glow ties to the orange CTA button. Verified by compositing the real gradient."
+    },
+    {
+      "slot": "Shared closing CTA (.cta .bg, opacity .45) — About, Services, Service detail, Projects, Project detail",
+      "file": "src/assets/images/cta-lobby.webp",
+      "dimensions": "1200x600",
+      "source": "Unsplash",
+      "photoId": "NxtKALyY6po",
+      "url": "https://unsplash.com/photos/a-modern-lobby-with-architectural-design-and-people-NxtKALyY6po",
+      "searchDescription": "modern lobby architectural design, textured feature wall, deep perspective",
+      "rationale": "Premium commercial lobby with a textured feature wall and receding perspective that opens to the right, leaving the left calm for the headline. People are present but read as distant anonymous silhouettes at .45 opacity — scale and life, not posed business portraits."
+    },
+    {
+      "slot": "About — masthead band (.band-tall)",
+      "file": "src/assets/images/about-vaulted-ceiling.webp",
+      "dimensions": "1600x1067",
+      "source": "Unsplash",
+      "photoId": "A8ENQlpF4Io",
+      "url": "https://unsplash.com/photos/ceiling-with-lights-and-architectural-details-A8ENQlpF4Io",
+      "searchDescription": "ceiling architectural details, timber and concrete vault, controlled lighting",
+      "rationale": "Pure architectural materiality — vaulted timber-and-concrete structure with controlled lighting. Communicates craft and execution rather than decoration, matching About's 'shared passion for creating inspiring spaces'. Warm tone, no people, no text, wide crop suits the band."
+    },
+    {
+      "slot": "About — sustainability (.sus / .b, 16:11)",
+      "file": "src/assets/images/sustainability-green-facade.webp",
+      "dimensions": "1400x933",
+      "source": "Unsplash",
+      "photoId": "ZfYyQ7DemHE",
+      "url": "https://unsplash.com/photos/modern-building-facade-with-vertical-green-planters-ZfYyQ7DemHE",
+      "searchDescription": "building facade with planting integrated into concrete structure",
+      "rationale": "Sustainability expressed through the built environment — planting designed into a rhythmic concrete facade. Deliberately avoids the cliché register (hands holding plants, generic leaves, sunlit trees). Repeating geometry suits the frame."
+    }
+  ],
+  "placeholdersRetained": {
+    "reason": "Option 2 scope — only the 6 highest-impact slots were filled. All other ImageSlots keep their labelled placeholders.",
+    "note": "Projects and Project Detail imagery is stock, not Silver Smart's own work. Replace with real project photography before launch so the portfolio does not misrepresent completed projects."
+  }
+}

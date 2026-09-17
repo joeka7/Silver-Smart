@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import ImageSlot from '../components/ImageSlot'
 import { ArrowLink, SectionHead } from '../components/Bits'
 import { HOME_SERVICES, HOME_WORK, CONTACT } from '../data/site'
+import { heroFacadeDusk, ctaHouseDusk } from '../assets/images'
 
 export default function Home() {
   // `data-index` behaviour from ss.js: hovering/focusing a service row swaps the visual.
@@ -15,8 +16,9 @@ export default function Home() {
         <div className="hero-rule"></div>
         <div className="hero-img fr fr-zoom" data-r="mask">
           <ImageSlot
+            src={heroFacadeDusk}
             placeholder="Hero image — architectural interior, portrait crop"
-            alt="Architectural interior, portrait crop"
+            alt="Contemporary commercial facade at dusk, bronze vertical fins over lit interiors"
           />
         </div>
         <div className="wrap hero-in">
@@ -144,7 +146,11 @@ export default function Home() {
       {/* ===== 04 end cta ===== */}
       <section className="end" id="start">
         <div className="bg fr">
-          <ImageSlot placeholder="Closing image — architecture at dusk" alt="Architecture at dusk" />
+          <ImageSlot
+            src={ctaHouseDusk}
+            placeholder="Closing image — architecture at dusk"
+            alt="Contemporary house at dusk, warm interior light through full-height glazing"
+          />
         </div>
         <div className="sc"></div>
         <div className="wrap end-in">

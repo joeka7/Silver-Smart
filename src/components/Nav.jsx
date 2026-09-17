@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import Logo from './Logo'
 import { NAV, CONTACT } from '../data/site'
 
 export default function Nav() {
@@ -27,8 +28,8 @@ export default function Nav() {
     <>
       <nav className="nav" aria-label="Primary">
         <div className="wrap nav-in">
-          <Link to="/" className="mark" aria-label="Silver Smart, home">
-            <b>SILVER</b> <span className="sm">SMART</span>
+          <Link to="/" className="mark has-logo" aria-label="Silver Smart, home">
+            <Logo />
           </Link>
           <div className="nlinks">
             {NAV.map((item) => (
@@ -36,11 +37,6 @@ export default function Nav() {
                 {item.label}
               </NavLink>
             ))}
-          </div>
-          <div className="lang" aria-label="Language">
-            <b>EN</b>
-            <span>/</span>
-            <a href="#ar" aria-label="Switch to Arabic">AR</a>
           </div>
           <button
             className="burger"
@@ -66,7 +62,6 @@ export default function Nav() {
         <div className="mfoot meta dim">
           <span>Abu Dhabi — United Arab Emirates</span>
           <a href={`mailto:${CONTACT.email}`} tabIndex={open ? 0 : -1}>{CONTACT.email}</a>
-          <span>EN / AR</span>
         </div>
       </div>
     </>

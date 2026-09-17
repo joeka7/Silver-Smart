@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import ImageSlot from '../components/ImageSlot'
 import ClosingCta from '../components/ClosingCta'
 import { SectionHead, Masthead, Caption, EditorialRows, ArrowLink } from '../components/Bits'
+import { featuredTimberAtrium } from '../assets/images'
 
 const DETAILS = [
   { n: '01', title: 'Layout', desc: 'Circulation and sightlines studied against how the home is actually lived in, then fixed in a complete project layout.' },
@@ -31,7 +32,11 @@ export default function ProjectDetail() {
       />
 
       <div className="band band-tall fr">
-        <ImageSlot placeholder="Project hero — full-bleed interior" alt="Project hero — full-bleed interior" />
+        <ImageSlot
+          src={featuredTimberAtrium}
+          placeholder="Project hero — full-bleed interior"
+          alt="Timber and glass atrium at night, lit from within"
+        />
       </div>
 
       <section className="sect on-paper">

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Logo from './Logo'
 import { NAV, SERVICE_LINKS, SOCIALS, CONTACT } from '../data/site'
 
 export default function Footer() {
@@ -7,8 +8,8 @@ export default function Footer() {
       <div className="wrap">
         <div className="foot-top">
           <div>
-            <Link to="/" className="mark">
-              <b>SILVER</b> <span className="sm">SMART</span>
+            <Link to="/" className="mark has-logo" aria-label="Silver Smart, home">
+              <Logo />
             </Link>
             <p className="lede dim" style={{ marginTop: 22, maxWidth: '24ch' }}>
               Building dreams, crafting spaces. Your vision, our expertise.

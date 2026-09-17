@@ -86,8 +86,6 @@ a.fr-zoom:hover image-slot,.fr-zoom:hover image-slot{transform:scale(1.04)}
 .nlinks a::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
 .nlinks a:hover::after,.nlinks a[aria-current]::after{transform:scaleX(1)}
 .nlinks a[aria-current]{color:var(--accent-lt)}
-.lang{display:flex;gap:8px;font-family:var(--mono);font-size:var(--meta);letter-spacing:.12em;color:var(--slate);padding-left:clamp(12px,2vw,28px);border-left:1px solid var(--ld-2)}
-.lang b{color:var(--paper);font-weight:500}
 .burger{display:none;width:44px;height:44px;margin-left:auto;margin-right:-10px;position:relative}
 .burger i{position:absolute;left:11px;width:22px;height:1px;background:currentColor;transition:transform .5s var(--ease),opacity .3s}
 .burger i:nth-child(1){top:19px}.burger i:nth-child(2){top:25px}
@@ -99,7 +97,7 @@ body.mopen .burger i:nth-child(2){transform:translateY(-3px) rotate(-45deg)}
 .mnav ul{display:flex;flex-direction:column;gap:clamp(6px,1.4vh,18px)}
 .mnav ul a{font-size:clamp(2rem,10vw,3.4rem);line-height:1;letter-spacing:-.03em;font-weight:500;text-transform:uppercase;display:block}
 .mnav .mfoot{display:grid;gap:10px;padding-top:24px;border-top:1px solid var(--ld-2)}
-@media(max-width:900px){.nlinks,.lang{display:none}.burger{display:block}}
+@media(max-width:900px){.nlinks{display:none}.burger{display:block}}
 /* reveal */
 [data-r]{opacity:0;transform:translateY(22px);transition:opacity 1s var(--ease),transform 1.1s var(--ease);transition-delay:var(--dl,0s)}
 [data-r].in{opacity:1;transform:none}
@@ -234,7 +232,6 @@ body.mopen .burger i:nth-child(2){transform:translateY(-3px) rotate(-45deg)}
 .mark::before{content:"";display:inline-block;width:8px;height:8px;background:var(--brand);margin-right:.85em;vertical-align:.04em}
 .nlinks a[aria-current]{color:var(--accent-lt)}
 .nlinks a[aria-current]::after,.nlinks a:hover::after{background:var(--brand)}
-.lang b{color:var(--accent-lt)}
 .mnav ul a:hover{color:var(--accent-lt)}
 .btn-brand{background:var(--brand);border-color:var(--brand);color:var(--ink)}
 .btn-brand:hover,.on-paper .btn-brand:hover,.on-paper2 .btn-brand:hover{background:var(--brand-dk);border-color:var(--brand-dk);color:var(--paper)}

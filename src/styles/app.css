@@ -23,3 +23,24 @@ a.fr-zoom:hover .islot,.fr-zoom:hover .islot{transform:scale(1.04)}
    horizontal scroll. Contain them to the chip group. */
 .chips{position:relative}
 .chips input{width:auto;left:0;top:0}
+
+/* Brand lockup — the real monogram replaces the placeholder square ss.css
+   draws via .mark::before, at the same optical size and spacing. */
+.mark.has-logo::before{content:none}
+.mark-logo{display:inline-block;width:auto;height:1.65em;margin-right:.6em;vertical-align:-.45em}
+
+/* Hero nav scrim — the hero image runs full-bleed under the transparent nav
+   (.hero-img z-index:0, .nav z-index:70), so bright facade highlights can reach
+   the same luminance as the paper-coloured nav text. This reuses the design's
+   existing .sc scrim idiom (rgba(10,11,12,…) over imagery) as a top-down fade
+   confined to the nav band, restoring contrast without a solid bar or blur.
+   It sits above the image but below .hero-in (z-index:2), so nothing else moves. */
+.hero-img::after{
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  height:calc(var(--navh,84px) + 56px);
+  background:linear-gradient(180deg,rgba(10,11,12,.72) 0%,rgba(10,11,12,.52) 52%,rgba(10,11,12,0) 100%);
+  pointer-events:none;
+  z-index:1;
+}
