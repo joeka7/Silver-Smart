@@ -2,7 +2,6 @@ import ImageSlot from '../components/ImageSlot'
 import ClosingCta from '../components/ClosingCta'
 import { SectionHead, Caption, Masthead, EditorialRows, Field } from '../components/Bits'
 import { ArrowLink } from '../components/Bits'
-import { aboutVaultedCeiling, sustainabilityGreenFacade } from '../assets/images'
 
 const PRINCIPLES = [
   { n: '01', title: 'Mission', desc: 'To provide premium property, interior design and maintenance services tailored to the unique needs and preferences of our clients — exceeding expectations through exceptional quality and attention to detail, with a commitment to sustainability and innovation.' },
@@ -33,9 +32,8 @@ export default function About() {
 
       <div className="band band-tall fr">
         <ImageSlot
-          src={aboutVaultedCeiling}
           placeholder="Studio / project image — wide architectural crop"
-          alt="Vaulted timber and concrete ceiling with recessed architectural lighting"
+          alt="Studio project — wide architectural crop"
         />
       </div>
 
@@ -115,9 +113,8 @@ export default function About() {
             <div className="b">
               <div className="fr" style={{ aspectRatio: '16/11' }} data-r="mask">
                 <ImageSlot
-                  src={sustainabilityGreenFacade}
                   placeholder="Material study — stone, timber, natural light"
-                  alt="Building facade with planting integrated into its concrete structure"
+                  alt="Material study — stone, timber and natural light"
                 />
               </div>
               <Caption left="Materials" right="Eco-friendly specification" />

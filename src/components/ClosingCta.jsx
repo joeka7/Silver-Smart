@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import ImageSlot from './ImageSlot'
 import { CONTACT } from '../data/site'
-import { ctaLobby } from '../assets/images'
 
 /**
  * Closing CTA band — `.cta` from ss.css, used by About, Services,
@@ -11,7 +10,7 @@ export default function ClosingCta({ heading, blurb, slot = 'Closing image — a
   return (
     <section className="cta">
       <div className="bg fr">
-        <ImageSlot src={ctaLobby} placeholder={slot} alt="Contemporary commercial lobby with textured feature wall" />
+        <ImageSlot placeholder={slot} alt={slot} />
       </div>
       <div className="sc"></div>
       <div className="wrap cta-in">

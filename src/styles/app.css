@@ -29,12 +29,13 @@ a.fr-zoom:hover .islot,.fr-zoom:hover .islot{transform:scale(1.04)}
 .mark.has-logo::before{content:none}
 .mark-logo{display:inline-block;width:auto;height:1.65em;margin-right:.6em;vertical-align:-.45em}
 
-/* Hero nav scrim — the hero image runs full-bleed under the transparent nav
-   (.hero-img z-index:0, .nav z-index:70), so bright facade highlights can reach
-   the same luminance as the paper-coloured nav text. This reuses the design's
-   existing .sc scrim idiom (rgba(10,11,12,…) over imagery) as a top-down fade
-   confined to the nav band, restoring contrast without a solid bar or blur.
-   It sits above the image but below .hero-in (z-index:2), so nothing else moves. */
+/* Hero nav scrim — the hero panel runs under the transparent nav
+   (.hero-img z-index:0, .nav z-index:70), so bright highlights in the panel
+   can reach the same luminance as the paper-coloured nav text. This reuses the
+   design's existing .sc scrim idiom (rgba(10,11,12,…) over imagery) as a
+   top-down fade confined to the nav band, restoring contrast without a solid
+   bar or blur. It sits above the panel media but below .hero-in (z-index:2),
+   so nothing else moves. */
 .hero-img::after{
   content:"";
   position:absolute;
@@ -44,3 +45,113 @@ a.fr-zoom:hover .islot,.fr-zoom:hover .islot{transform:scale(1.04)}
   pointer-events:none;
   z-index:1;
 }
+
+/* ===== Hero background video =====
+   Full-bleed backdrop for the whole section. .hero already has
+   position:relative and overflow:hidden, so filling it introduces no new
+   stacking or sizing context and the hero's height, width and responsive
+   behaviour are untouched. z-index:0 keeps it under .hero-rule (1),
+   .hero-in (2) and the .hero-img panel, and it never takes pointer events,
+   so the nav, headline and buttons above it stay clickable. */
+.hero-vid{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--ink)}
+.hero-vid video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+  pointer-events:none;
+}
+
+/* Readability overlay for the video — the hero headline, kicker, buttons and
+   the .hero-side list all sit directly over the footage, so this is a genuine
+   contrast layer, not tone. It lives inside .hero-vid so it shares the video's
+   stacking level and paints after it, while still sitting under .hero-rule (1),
+   .hero-in (2) and the panel: it can never ride above the hero content.
+
+   Directional rather than one flat wash. Measured over the real text boxes on
+   the brightest source, a flat wash heavy enough to carry the type left the
+   whole hero muddy, so the ramp is dark at both text columns — .hero-t and
+   .hero-foot on the left (grid columns 1–9) and .hero-side on the right
+   (9–13, whose --slate labels read 6.11:1 on the design's plain ink and must
+   not regress) — and lifts across the middle band, which is clear of type. */
+.hero-vid::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,rgba(10,11,12,.82) 0%,rgba(10,11,12,.74) 44%,rgba(10,11,12,.6) 60%,rgba(10,11,12,.78) 86%,rgba(10,11,12,.82) 100%),
+    rgba(10,11,12,.3);
+  pointer-events:none;
+}
+/* Stacked vertically instead on the mobile layout, where the .hero-img panel
+   moves above the copy and the type runs the full width of the frame. */
+@media(max-width:1000px){
+  .hero-vid::after{
+    background:
+      linear-gradient(180deg,rgba(10,11,12,.42) 0%,rgba(10,11,12,.6) 34%,rgba(10,11,12,.8) 100%),
+      rgba(10,11,12,.3);
+  }
+}
+
+/* ===== Hero image slider =====
+   Five stacked frames filling the .hero-img panel, which owns the panel's
+   geometry and responsive behaviour — the frame, its size and its existing
+   treatment are unchanged. Only opacity animates, so a step is compositor-only
+   and never reflows the hero. Absolutely filled like the ImageSlot it replaces,
+   and decorative, so it never takes pointer events. */
+.hero-slider{position:absolute;inset:0;overflow:hidden;pointer-events:none;background:var(--ink)}
+.hero-slider img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  opacity:0;
+  transition:opacity var(--hero-fade,1s) linear;
+  pointer-events:none;
+  user-select:none;
+}
+.hero-slider img.is-on{opacity:1}
+/* Linear (not eased) crossfade: with both layers painted, a symmetric linear
+   ramp keeps total luminance flat through the midpoint. An ease curve dips
+   both layers together around 50% and reads as a dark pulse. */
+
+/* Panel tone — a single flat black wash that settles the frames against the
+   hero's ink field and takes the edge off their highlights. Kept light so the
+   photography still reads bright; no hero text sits over the panel body (on
+   desktop .hero-side clears its bottom edge, on mobile the panel is a separate
+   block above the type), so this is tone only, not a contrast fix. Scoped to
+   :has(.hero-slider) so every ImageSlot elsewhere on the site is untouched. */
+.hero-img:has(.hero-slider)::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(10,11,12,.22);
+  pointer-events:none;
+  z-index:1;
+}
+
+/* The nav links cross the panel, and this photography is far brighter than the
+   dusk imagery the ::after scrim above was tuned for. Deepening the existing
+   scrim only within the nav band (rather than darkening the whole panel) keeps
+   the nav legible while leaving the visible body of the panel at its intended
+   brightness. */
+.hero-img:has(.hero-slider)::after{
+  background:linear-gradient(180deg,rgba(10,11,12,.92) 0%,rgba(10,11,12,.8) 46%,rgba(10,11,12,0) 100%);
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hero-slider img{transition:none}
+}
+
+/* The .hero-side list keeps the design's --slate labels, which read 6.11:1 on
+   the original plain-ink hero. Over moving footage the overlay alone cannot
+   hold that on the brightest frames without dragging the whole hero darker, so
+   the type carries a soft shadow instead — invisible against the dark field,
+   but enough to detach the small mono labels from a bright plate behind them.
+   Colour, size, weight and spacing are untouched. */
+.hero:has(.hero-vid) .hero-side{text-shadow:0 1px 3px rgba(10,11,12,.9),0 0 12px rgba(10,11,12,.65)}
