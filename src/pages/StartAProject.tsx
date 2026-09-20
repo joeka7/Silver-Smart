@@ -1,23 +1,25 @@
 import { useState } from 'react'
+import type { FormEvent } from 'react'
 import ImageSlot from '../components/ImageSlot'
 import { SectionHead, Masthead, ArrowLink } from '../components/Bits'
 import { CONTACT, SOCIALS } from '../data/site'
+import type { StyleWithVars } from '../types/css'
 
-const SECTOR_OPTIONS = ['Commercial', 'Corporate', 'Healthcare', 'Residential', 'Hospitality', 'Maintenance']
-const SERVICE_OPTIONS = ['Property', 'Interior design', 'Fit-out', 'Maintenance']
+const SECTOR_OPTIONS: string[] = ['Commercial', 'Corporate', 'Healthcare', 'Residential', 'Hospitality', 'Maintenance']
+const SERVICE_OPTIONS: string[] = ['Property', 'Interior design', 'Fit-out', 'Maintenance']
 
 export default function StartAProject() {
-  const [services, setServices] = useState([])
-  const [status, setStatus] = useState(null)
+  const [services, setServices] = useState<string[]>([])
+  const [status, setStatus] = useState<string | null>(null)
 
-  const toggleService = (value) =>
+  const toggleService = (value: string): void =>
     setServices((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
 
   /**
    * No backend is defined in the design, so the form composes a mailto: to the
    * published address rather than silently discarding the enquiry.
    */
-  const onSubmit = (e) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
     const form = new FormData(e.currentTarget)
     const name = (form.get('name') || '').toString().trim()
@@ -174,7 +176,7 @@ export default function StartAProject() {
                 We provide the <span className="ob">best service</span> in interior design and maintenance.
               </h2>
             </div>
-            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' }}>
+            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
               <p className="dim">
                 Every space counts. Whether the brief is a single room, a full fit-out or a maintenance contract, it is
                 handled by the same team to the same standard.

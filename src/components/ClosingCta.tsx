@@ -1,12 +1,21 @@
 import { Link } from 'react-router-dom'
+import type { ReactNode } from 'react'
 import ImageSlot from './ImageSlot'
 import { CONTACT } from '../data/site'
+import type { StyleWithVars } from '../types/css'
+
+interface ClosingCtaProps {
+  /** Usually a fragment with a highlighted span, so ReactNode. */
+  heading: ReactNode
+  blurb: ReactNode
+  slot?: string
+}
 
 /**
  * Closing CTA band — `.cta` from ss.css, used by About, Services,
  * Projects, Project Detail and the four service pages.
  */
-export default function ClosingCta({ heading, blurb, slot = 'Closing image — architectural interior' }) {
+export default function ClosingCta({ heading, blurb, slot = 'Closing image — architectural interior' }: ClosingCtaProps) {
   return (
     <section className="cta">
       <div className="bg fr">
@@ -23,14 +32,14 @@ export default function ClosingCta({ heading, blurb, slot = 'Closing image — a
             <p
               className="lede dim"
               data-r
-              style={{ '--dl': '.08s', maxWidth: '42ch', marginTop: 'clamp(20px,2.6vw,34px)' }}
+              style={{ '--dl': '.08s', maxWidth: '42ch', marginTop: 'clamp(20px,2.6vw,34px)' } as StyleWithVars}
             >
               {blurb}
             </p>
             <div
               className="ctas"
               data-r
-              style={{ '--dl': '.14s', marginTop: 'clamp(28px,3.4vw,48px)' }}
+              style={{ '--dl': '.14s', marginTop: 'clamp(28px,3.4vw,48px)' } as StyleWithVars}
             >
               <Link to="/start-a-project" className="btn btn-brand">Start a project</Link>
               <Link to="/start-a-project" className="btn btn-line">Contact us</Link>

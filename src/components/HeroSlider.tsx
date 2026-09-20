@@ -5,9 +5,9 @@ import hero3 from '../imgs/hero3.webp'
 import hero4 from '../imgs/hero4.webp'
 import hero5 from '../imgs/hero5.webp'
 
-const SLIDES = [hero1, hero2, hero3, hero4, hero5]
-const HOLD = 6000 // visible time per image
-const FADE = 1000 // crossfade duration; mirrored by --hero-fade in app.css
+const SLIDES: string[] = [hero1, hero2, hero3, hero4, hero5]
+export const HOLD: number = 6000 // visible time per image
+export const FADE: number = 1000 // crossfade duration; mirrored by --hero-fade in app.css
 
 /**
  * Cinematic image sequence for the Home hero's right-hand visual panel.
@@ -21,13 +21,13 @@ const FADE = 1000 // crossfade duration; mirrored by --hero-fade in app.css
  * responsive behaviour; purely decorative.
  */
 export default function HeroSlider() {
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState<number>(0)
 
   useEffect(() => {
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduced || SLIDES.length < 2) return
-    const id = setInterval(() => setIndex((i) => (i + 1) % SLIDES.length), HOLD)
-    return () => clearInterval(id)
+    const id = window.setInterval(() => setIndex((i) => (i + 1) % SLIDES.length), HOLD)
+    return () => window.clearInterval(id)
   }, [])
 
   return (

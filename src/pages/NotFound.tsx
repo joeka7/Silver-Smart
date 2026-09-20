@@ -1,4 +1,5 @@
 import { Masthead, ArrowLink } from '../components/Bits'
+import type { StyleWithVars } from '../types/css'
 
 export default function NotFound() {
   return (
@@ -19,7 +20,7 @@ export default function NotFound() {
             <div className="a-wide" data-r>
               <h2 className="d2">Let us point you back to the work.</h2>
             </div>
-            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' }}>
+            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
               <ArrowLink to="/">Return home</ArrowLink>
               <ArrowLink to="/projects">Selected work</ArrowLink>
               <ArrowLink to="/start-a-project">Start a project</ArrowLink>

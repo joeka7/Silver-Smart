@@ -4,7 +4,7 @@ import Logo from './Logo'
 import { NAV, CONTACT } from '../data/site'
 
 export default function Nav() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState<boolean>(false)
   const { pathname } = useLocation()
 
   // Close the mobile menu on route change
@@ -17,7 +17,7 @@ export default function Nav() {
   }, [open])
 
   useEffect(() => {
-    const onKey = (e) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setOpen(false)
     }
     addEventListener('keydown', onKey)

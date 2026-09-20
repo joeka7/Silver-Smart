@@ -2,14 +2,23 @@ import { Link } from 'react-router-dom'
 import ImageSlot from '../components/ImageSlot'
 import ClosingCta from '../components/ClosingCta'
 import { SectionHead, Masthead, Caption, EditorialRows, ArrowLink } from '../components/Bits'
+import type { StyleWithVars } from '../types/css'
+import type { NumberedItem } from '../data/site'
 
-const DETAILS = [
+const DETAILS: NumberedItem[] = [
   { n: '01', title: 'Layout', desc: 'Circulation and sightlines studied against how the home is actually lived in, then fixed in a complete project layout.' },
   { n: '02', title: 'Joinery', desc: 'Built elements designed for their position rather than selected to fill it, with tolerances resolved on paper first.' },
   { n: '03', title: 'Finishes', desc: 'Colours, materials and decoration carried through specification to the item installed — and protected until handover.' },
 ]
 
-const FACTS = [
+/** The project fact grid renders a label and a value only — no description. */
+interface ProjectFact {
+  n: string
+  title: string
+  desc: string
+}
+
+const FACTS: ProjectFact[] = [
   { n: 'Sector', title: 'Residential', desc: '' },
   { n: 'Disciplines', title: 'Interior design, Fit-out', desc: '' },
   { n: 'Region', title: 'United Arab Emirates', desc: '' },
@@ -44,7 +53,7 @@ export default function ProjectDetail() {
                 <span className="ob">an outstanding plan</span>.
               </h2>
             </div>
-            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' }}>
+            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
               <p>
                 The brief was handled end to end: interior design through fit-out, with the same team accountable for
                 the drawings and for what was built from them.
@@ -77,13 +86,13 @@ export default function ProjectDetail() {
               </div>
               <Caption left="Living" right="Plan & light" />
             </div>
-            <div className="s2" data-r="mask" style={{ '--dl': '.08s' }}>
+            <div className="s2" data-r="mask" style={{ '--dl': '.08s' } as StyleWithVars}>
               <div className="fr fr-zoom">
                 <ImageSlot placeholder="Joinery detail — portrait crop" alt="Joinery detail — portrait crop" />
               </div>
               <Caption left="Joinery" right="Detail" />
             </div>
-            <div className="s3" data-r="mask" style={{ '--dl': '.12s' }}>
+            <div className="s3" data-r="mask" style={{ '--dl': '.12s' } as StyleWithVars}>
               <div className="fr fr-zoom">
                 <ImageSlot placeholder="Material & finish — panoramic crop" alt="Material and finish — panoramic crop" />
               </div>
@@ -110,7 +119,7 @@ export default function ProjectDetail() {
               </blockquote>
               <Caption left="Mohammad Ali" right="Residential client" style={{ maxWidth: 520 }} />
             </div>
-            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' }}>
+            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
               <p className="dim">
                 After handover, the same team stays available for general maintenance and care — so the space keeps the
                 standard it was built to.

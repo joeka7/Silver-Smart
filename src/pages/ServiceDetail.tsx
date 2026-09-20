@@ -2,14 +2,16 @@ import { useParams, Navigate, Link } from 'react-router-dom'
 import ImageSlot from '../components/ImageSlot'
 import ClosingCta from '../components/ClosingCta'
 import { SectionHead, Masthead, Caption, EditorialRows, ArrowLink } from '../components/Bits'
-import { SERVICES } from '../data/services'
+import { SERVICES, isServiceSlug } from '../data/services'
+import type { StyleWithVars } from '../types/css'
 
 /** One template for all four service pages — they share structure in the design. */
 export default function ServiceDetail() {
-  const { slug } = useParams()
-  const svc = SERVICES[slug]
+  const { slug } = useParams<{ slug: string }>()
 
-  if (!svc) return <Navigate to="/services" replace />
+  if (!isServiceSlug(slug)) return <Navigate to="/services" replace />
+
+  const svc = SERVICES[slug]
 
   return (
     <>
@@ -36,7 +38,7 @@ export default function ServiceDetail() {
             <div className="a-wide" data-r>
               <h2 className="d2">{svc.lead}</h2>
             </div>
-            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' }}>
+            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
               {svc.body.map((para, i) => (
                 <p key={para} className={i > 0 ? 'dim' : undefined}>{para}</p>
               ))}

@@ -3,8 +3,17 @@ import ClosingCta from '../components/ClosingCta'
 import { SectionHead, Masthead, Field, ArrowLink } from '../components/Bits'
 import { SPECIALISATION } from '../data/site'
 import { SERVICES } from '../data/services'
+import type { ServiceSlug } from '../data/services'
 
-const BLOCKS = [
+/** One summary block per discipline; `key` indexes into SERVICES for n/title/slug. */
+interface ServiceBlock {
+  key: ServiceSlug
+  lead: string
+  body: string
+  slot: string
+}
+
+const BLOCKS: ServiceBlock[] = [
   { key: 'property', lead: 'A property company held to global and international standards.',
     body: 'From acquisition and handover to long-term asset care, we treat property as a long-horizon responsibility — value protected by how well a building is specified, delivered and looked after.',
     slot: 'Property — building exterior' },

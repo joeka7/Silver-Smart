@@ -14,7 +14,7 @@ import StartAProject from './pages/StartAProject'
 import NotFound from './pages/NotFound'
 
 /** Reset scroll on navigation, but honour in-page anchors (#s01 … #s06). */
-function ScrollManager() {
+function ScrollManager(): null {
   const { pathname, hash } = useLocation()
   useEffect(() => {
     if (hash) {

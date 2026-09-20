@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
+import type { DependencyList } from 'react'
 
-const prefersReducedMotion = () =>
+const prefersReducedMotion = (): boolean =>
   typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion:reduce)').matches
 
 /**
@@ -17,16 +18,18 @@ const prefersReducedMotion = () =>
  * removed from `items`. A MutationObserver re-asserts `in` on nodes we have
  * already revealed, so both writers can coexist.
  */
-export function useReveals(deps = []) {
+export function useReveals(deps: DependencyList = []) {
   useEffect(() => {
-    let items = [...document.querySelectorAll('[data-r]')]
-    const revealed = new WeakSet()
+    const items = [...document.querySelectorAll<HTMLElement>('[data-r]')]
+    const revealed = new WeakSet<Element>()
 
     // stagger groups: assign --dl to each child in document order
-    document.querySelectorAll('[data-stagger]').forEach((group) => {
-      const step = parseFloat(group.dataset.stagger) || 0.08
+    document.querySelectorAll<HTMLElement>('[data-stagger]').forEach((group) => {
+      const step = parseFloat(group.dataset.stagger ?? '') || 0.08
       ;[...group.children].forEach((child, i) => {
-        const target = child.matches('[data-r]') ? child : child.querySelector('[data-r]')
+        const target = child.matches('[data-r]')
+          ? (child as HTMLElement)
+          : child.querySelector<HTMLElement>('[data-r]')
         if (target && !target.style.getPropertyValue('--dl')) {
           target.style.setProperty('--dl', i * step + 's')
         }
@@ -53,7 +56,7 @@ export function useReveals(deps = []) {
       }
     }
 
-    let raf = null
+    let raf: number | null = null
     const queue = () => {
       if (!raf) {
         raf = requestAnimationFrame(() => {
@@ -87,10 +90,10 @@ export function useReveals(deps = []) {
  * React re-render. Watches only the class attribute, and only re-adds a class
  * the node had already earned, so it cannot reveal anything early.
  */
-function guardRevealed(revealed) {
+function guardRevealed(revealed: WeakSet<Element>): () => void {
   const mo = new MutationObserver((records) => {
     for (const rec of records) {
-      const el = rec.target
+      const el = rec.target as Element
       if (revealed.has(el) && !el.classList.contains('in')) el.classList.add('in')
     }
   })
@@ -140,18 +143,20 @@ export function useScrollProgress() {
 }
 
 /** Subtle hero/featured parallax — port of the [data-drift] ticker in ss.js. */
-export function useDrift(deps = []) {
+export function useDrift(deps: DependencyList = []) {
   useEffect(() => {
     if (prefersReducedMotion()) return
-    const items = [...document.querySelectorAll('[data-drift]')]
+    const items = [...document.querySelectorAll<HTMLElement>('[data-drift]')]
     if (!items.length) return
 
-    let raf = null
+    let raf: number | null = null
     const tick = () => {
       const vh = innerHeight
       items.forEach((el) => {
-        const p = el.parentElement.getBoundingClientRect()
-        const k = parseFloat(el.dataset.drift) || 0.06
+        const parent = el.parentElement
+        if (!parent) return
+        const p = parent.getBoundingClientRect()
+        const k = parseFloat(el.dataset.drift ?? '') || 0.06
         const off = (p.top + p.height / 2 - vh / 2) * -k
         el.style.transform = `translate3d(0,${off.toFixed(2)}px,0)`
       })

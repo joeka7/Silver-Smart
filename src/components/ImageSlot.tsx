@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 /**
  * ImageSlot — React equivalent of the design prototype's <image-slot> element.
  *
@@ -10,7 +12,18 @@
  * Drop real photography in by passing `src` — every call site already carries the
  * art-directed `alt`/`placeholder` text from the design.
  */
-export default function ImageSlot({ src, alt = '', placeholder = '', fit = 'cover', credit, creditHref }) {
+interface ImageSlotProps {
+  /** Real photography. With none, a labelled placeholder tile renders instead. */
+  src?: string
+  alt?: string
+  placeholder?: string
+  /** object-fit applied to the image once a src is supplied. */
+  fit?: CSSProperties['objectFit']
+  credit?: string
+  creditHref?: string
+}
+
+export default function ImageSlot({ src, alt = '', placeholder = '', fit = 'cover', credit, creditHref }: ImageSlotProps) {
   if (!src) {
     return (
       <div className="islot islot-empty" role="img" aria-label={alt || placeholder || 'Image placeholder'}>

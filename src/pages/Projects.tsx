@@ -3,6 +3,7 @@ import ImageSlot from '../components/ImageSlot'
 import ClosingCta from '../components/ClosingCta'
 import { SectionHead, Masthead, Caption, ArrowLink } from '../components/Bits'
 import { SECTORS } from '../data/site'
+import type { StyleWithVars } from '../types/css'
 
 const DETAIL = '/projects/residential-interior-fit-out'
 
@@ -50,7 +51,7 @@ export default function Projects() {
                 </Link>
                 <Caption left={s.title} right={s.cap} />
               </div>
-              <div className="im2" data-r="mask" style={{ '--dl': '.1s' }}>
+              <div className="im2" data-r="mask" style={{ '--dl': '.1s' } as StyleWithVars}>
                 <Link className="fr fr-zoom" to={DETAIL}>
                   <ImageSlot placeholder={s.slotB} alt={s.slotB} />
                 </Link>
@@ -70,7 +71,7 @@ export default function Projects() {
               </blockquote>
               <Caption left="Sultan Majid" right="Client" style={{ maxWidth: 520 }} />
             </div>
-            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' }}>
+            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
               <p className="dim">
                 Every project is a test of the same three things: how it was planned, how it was built, and how it is
                 kept.

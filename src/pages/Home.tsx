@@ -5,10 +5,11 @@ import HeroVideo from '../components/HeroVideo'
 import HeroSlider from '../components/HeroSlider'
 import { ArrowLink, SectionHead } from '../components/Bits'
 import { HOME_SERVICES, HOME_WORK, CONTACT } from '../data/site'
+import type { StyleWithVars } from '../types/css'
 
 export default function Home() {
   // `data-index` behaviour from ss.js: hovering/focusing a service row swaps the visual.
-  const [activeService, setActiveService] = useState(0)
+  const [activeService, setActiveService] = useState<number>(0)
 
   return (
     <>
@@ -30,11 +31,11 @@ export default function Home() {
               <span className="i">with</span>
               <span className="ob">purpose.</span>
             </h1>
-            <div className="hero-foot" data-r style={{ '--dl': '.12s' }}>
+            <div className="hero-foot" data-r style={{ '--dl': '.12s' } as StyleWithVars}>
               <Link to="/start-a-project" className="btn btn-brand">Start a project</Link>
               <Link to="/projects" className="btn btn-line">Explore our work</Link>
             </div>
-            <div className="hero-side meta" data-r style={{ '--dl': '.2s' }}>
+            <div className="hero-side meta" data-r style={{ '--dl': '.2s' } as StyleWithVars}>
               <span className="l"><span>Location</span><b>Abu Dhabi, UAE</b></span>
               <span className="l"><span>Sectors</span><b>Six</b></span>
               <span className="l"><span>Discipline</span><b>Design &amp; Build</b></span>
@@ -54,7 +55,7 @@ export default function Home() {
                 We create spaces where <span className="ser ital ob">design, functionality</span> and precision come together.
               </h2>
             </div>
-            <div className="intro-b" data-r style={{ '--dl': '.1s' }}>
+            <div className="intro-b" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
               <p>
                 Silver Smart is a property, interior design, fit-out and general maintenance company based in the
                 United Arab Emirates. We are dedicated to creating inspiring spaces and maintaining properties to the
@@ -159,11 +160,11 @@ export default function Home() {
               <p
                 className="lede dim"
                 data-r
-                style={{ '--dl': '.08s', maxWidth: '40ch', marginTop: 'clamp(22px,3vw,40px)' }}
+                style={{ '--dl': '.08s', maxWidth: '40ch', marginTop: 'clamp(22px,3vw,40px)' } as StyleWithVars}
               >
                 Let&apos;s build something exceptional. Tell us about the property, the brief and the timeline.
               </p>
-              <div className="ctas" data-r style={{ '--dl': '.14s', marginTop: 'clamp(30px,4vw,54px)' }}>
+              <div className="ctas" data-r style={{ '--dl': '.14s', marginTop: 'clamp(30px,4vw,54px)' } as StyleWithVars}>
                 <Link to="/start-a-project" className="btn btn-brand">Start a project</Link>
                 <Link to="/start-a-project" className="btn btn-line">Contact us</Link>
               </div>

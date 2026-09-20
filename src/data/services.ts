@@ -1,7 +1,34 @@
 // The four service pages share one structure in the design; only content differs.
 // Content is transcribed verbatim from service-*.html.
 
-export const SERVICES = {
+import type { NumberedItem } from './site'
+
+/** The link to the following service page in the fixed 01 → 04 → 01 rotation. */
+export interface ServiceNextLink {
+  label: string
+  to: string
+}
+
+/** One service page's content. All four pages share this shape. */
+export interface Service {
+  slug: string
+  n: string
+  title: string
+  navLabel: string
+  kicker: string
+  bandSlot: string
+  lead: string
+  body: string[]
+  ctaLabel: string
+  scope: NumberedItem[]
+  detailSlot: string
+  next: ServiceNextLink
+}
+
+/** Slug union, so `SERVICES[...]` lookups and route params stay in step. */
+export type ServiceSlug = 'property' | 'interior-design' | 'fit-out' | 'maintenance'
+
+export const SERVICES: Record<ServiceSlug, Service> = {
   property: {
     slug: 'property', n: '01', title: 'Property', navLabel: 'Property',
     kicker: 'We are a property company held to global and international standards.',
@@ -76,4 +103,9 @@ export const SERVICES = {
   },
 }
 
-export const SERVICE_SLUGS = Object.keys(SERVICES)
+export const SERVICE_SLUGS = Object.keys(SERVICES) as ServiceSlug[]
+
+/** Narrows an arbitrary route param to a known service slug. */
+export function isServiceSlug(slug: string | undefined): slug is ServiceSlug {
+  return slug !== undefined && Object.prototype.hasOwnProperty.call(SERVICES, slug)
+}
