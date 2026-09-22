@@ -1,31 +1,37 @@
-import ImageSlot from '../components/ImageSlot'
+import { Link } from 'react-router-dom'
 import ClosingCta from '../components/ClosingCta'
-import { SectionHead, Masthead, Field, ArrowLink } from '../components/Bits'
+import { SectionIndex, Masthead, FieldGrid } from '../components/UI'
 import { SPECIALISATION } from '../data/site'
-import { SERVICES } from '../data/services'
-import type { ServiceSlug } from '../data/services'
+import { SERVICES, SERVICE_SLUGS } from '../data/services'
+import type { StyleWithVars } from '../types/css'
+import hero1 from '../imgs/image.webp'
+import hero2 from '../imgs/image2.webp'
+import hero3 from '../imgs/image3.webp'
+import hero4 from '../imgs/image4.webp'
 
-/** One summary block per discipline; `key` indexes into SERVICES for n/title/slug. */
-interface ServiceBlock {
-  key: ServiceSlug
-  lead: string
-  body: string
-  slot: string
+/** One photograph per discipline, drawn from the existing Silver Smart set. */
+const DISCIPLINE_IMAGE: Record<string, string> = {
+  property: hero1,
+  'interior-design': hero2,
+  'fit-out': hero3,
+  maintenance: hero4,
 }
 
-const BLOCKS: ServiceBlock[] = [
-  { key: 'property', lead: 'A property company held to global and international standards.',
-    body: 'From acquisition and handover to long-term asset care, we treat property as a long-horizon responsibility — value protected by how well a building is specified, delivered and looked after.',
-    slot: 'Property — building exterior' },
-  { key: 'interior-design', lead: 'Highly efficient and satisfactory designs, with complete project layouts.',
-    body: 'Design begins with how a space will actually be used. We resolve plan, light, circulation and material before anything is built, so the drawings answer the questions the site will ask.',
-    slot: 'Interior design — concept & layout' },
-  { key: 'fit-out', lead: 'We care about the details of the implementation of projects.',
-    body: 'Colours, materials, decoration and the joints between them. Fit-out is where a design is either honoured or lost, so execution is managed to the same standard the drawings were held to.',
-    slot: 'Fit-out — materials & finishes' },
-  { key: 'maintenance', lead: 'A good service in the field of general maintenance and care for all projects.',
-    body: 'Preventing problems before they happen, and resolving those that have already occurred — keeping a space performing to the standard it was built to.',
-    slot: 'Maintenance — building services' },
+/** Short technical register shown under each discipline's scope list. */
+const DISCIPLINE_TAG: Record<string, string> = {
+  property: 'Acquisition · Handover · Asset care',
+  'interior-design': 'Plan · Light · Circulation · Material',
+  'fit-out': 'Colours · Materials · Decoration',
+  maintenance: 'Preventive · Reactive · General',
+}
+
+/** The delivery sequence, described from the four published disciplines. */
+const PHASES = [
+  { n: '01', title: 'Brief', desc: 'We start with the brief, the site and the people who will use it — understanding unique needs before anything is drawn.', note: 'Discover', key: true },
+  { n: '02', title: 'Design', desc: 'Complete project layouts and personalised solutions, resolved on paper so decisions are made before work begins.', note: 'Interior design' },
+  { n: '03', title: 'Specification', desc: 'Colours, materials and finishes chosen for the light, the use and the standard of finish intended.', note: 'Material & colour' },
+  { n: '04', title: 'Fit-out', desc: 'Execution managed to the standard the drawings were held to, with sequence and tolerance coordinated on site.', note: 'Implementation' },
+  { n: '05', title: 'Handover & care', desc: 'Handover, then general maintenance and care — keeping the space performing to the standard it was built to.', note: 'Maintenance', key: true },
 ]
 
 export default function Services() {
@@ -33,52 +39,125 @@ export default function Services() {
     <>
       <Masthead
         n="02"
-        eyebrow="Services"
-        title={<>What<br /><span className="ob">we do</span></>}
+        eyebrow="Practice disciplines & capabilities"
+        title={<>A seamless single-source <span className="c-primary">delivery model.</span></>}
+        lede="Find out what we do through our extensive range of services — and how we can realise your aspirations for property and design. From first brief to long-term maintenance, without third-party dilution."
         meta={[
           { label: 'Disciplines', value: 'Four' },
           { label: 'Sectors', value: 'Six' },
           { label: 'Region', value: 'UAE' },
         ]}
-        kicker="Find out what we do through our extensive range of services — and how we can realise your aspirations for property and design."
+        note="End-to-end execution"
       />
 
-      <section className="sect on-paper" style={{ paddingBottom: 0 }}>
-        <div className="wrap">
-          {BLOCKS.map((b, i) => {
-            const svc = SERVICES[b.key]
+      {/* ===== DISCIPLINE BLOCKS ===== */}
+      <section className="section surface-base" style={{ paddingTop: 0 }}>
+        <div className="wrap stack-lg" style={{ gap: 'var(--space-2xl)' }}>
+          {SERVICE_SLUGS.map((slug, i) => {
+            const svc = SERVICES[slug]
+            const alt = i % 2 === 1
             return (
-              <div className={`svcblk${i % 2 === 1 ? ' alt' : ''}`} key={b.key}>
-                <div className="im" data-r="mask">
-                  <div className="fr fr-zoom">
-                    <ImageSlot placeholder={b.slot} alt={b.slot} />
+              <article className={`disc${alt ? ' alt' : ''}`} data-r key={slug}>
+                <div className="disc-body">
+                  <div className="stack">
+                    <div className="flex-between t-label">
+                      <span className="c-accent" style={{ fontWeight: 600 }}>Discipline // {svc.n}</span>
+                      <span className="c-muted">{DISCIPLINE_TAG[slug]}</span>
+                    </div>
+
+                    <h2 className="t-md">{svc.title}</h2>
+                    <p className="t-body c-dim">{svc.lead}</p>
+
+                    <div className="stack" style={{ gap: 'var(--space-sm)', marginTop: 'var(--space-sm)' }}>
+                      <span className="t-label c-muted">Scope &amp; deliverables</span>
+                      <div className="checks">
+                        {svc.scope.map((s) => (
+                          <span className="check" key={s.title}>
+                            <span>
+                              <b style={{ fontWeight: 600, color: 'var(--on-surface)' }}>{s.title}</b> — {s.desc}
+                            </span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="disc-foot">
+                    <span>Sectors: Six</span>
+                    <Link to={`/services/${svc.slug}`} className="tlink">
+                      <span>View service</span>
+                      <span className="arrow" aria-hidden="true">&#8594;</span>
+                    </Link>
                   </div>
                 </div>
-                <div className="tx" data-r>
-                  <span className="bn">{svc.n}</span>
-                  <h2 className="d2" style={{ marginBottom: 'clamp(14px,2vw,24px)' }}>{svc.title}</h2>
-                  <p className="lede" style={{ marginBottom: 'clamp(14px,2vw,22px)' }}>{b.lead}</p>
-                  <p className="dim mw" style={{ marginBottom: 'clamp(22px,3vw,34px)' }}>{b.body}</p>
-                  <ArrowLink to={`/services/${svc.slug}`}>View service</ArrowLink>
+
+                <div className="disc-media frame-zoom">
+                  <img src={DISCIPLINE_IMAGE[slug]} alt={svc.bandSlot} loading="lazy" decoding="async" />
+                  <div className="glass frame-cap frame-cap-dock">
+                    <div>
+                      <span className="t-label c-muted" style={{ display: 'block', fontSize: '0.625rem' }}>
+                        Discipline
+                      </span>
+                      <span className="t-sm" style={{ fontSize: '0.9rem' }}>{svc.title}</span>
+                    </div>
+                    <span className="t-label c-accent">{svc.n} / 04</span>
+                  </div>
                 </div>
-              </div>
+              </article>
             )
           })}
         </div>
       </section>
 
-      <section className="sect on-ink">
+      {/* ===== DELIVERY SEQUENCE ===== */}
+      <section className="section surface-lowest" style={{ borderBlock: '1px solid var(--hairline)' }}>
         <div className="wrap">
-          <SectionHead n="03" title="Our specialisation" note="Where our experience meets your needs" />
-          <Field items={SPECIALISATION} />
-          <div style={{ marginTop: 'clamp(36px,5vw,70px)' }}>
-            <ArrowLink to="/projects">See the work</ArrowLink>
+          <div className="split split-end" style={{ marginBottom: 'clamp(2rem, 4vw, 3.5rem)' }}>
+            <div className="col-8" data-r>
+              <span className="t-label c-accent" style={{ display: 'block', marginBottom: '0.5rem' }}>
+                Methodology // one accountable team
+              </span>
+              <h2 className="t-lg">The delivery sequence</h2>
+            </div>
+            <div className="col-4" data-r style={{ '--dl': '.08s' } as StyleWithVars}>
+              <p className="t-body c-dim">
+                A single framework from brief to long-term care, so nothing is handed between parties who did not write
+                it.
+              </p>
+            </div>
+          </div>
+
+          <div className="phases" data-stagger=".05">
+            {PHASES.map((p) => (
+              <div className={`phase${p.key ? ' is-key' : ''}`} data-r key={p.n}>
+                <div className="stack" style={{ gap: 'var(--space-sm)' }}>
+                  <span className="t-label c-accent">Phase {p.n}</span>
+                  <h3 className="t-sm" style={{ fontSize: '1.05rem', textTransform: 'uppercase' }}>{p.title}</h3>
+                  <p className="t-small c-dim">{p.desc}</p>
+                </div>
+                <div className="phase-foot t-label c-muted" style={{ fontSize: '0.625rem' }}>{p.note}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== SPECIALISATION ===== */}
+      <section className="section surface-base">
+        <div className="wrap">
+          <SectionIndex n="03" title="Our specialisation" note="Where our experience meets your needs" />
+          <FieldGrid items={SPECIALISATION} />
+          <div className="mt-xl" data-r>
+            <Link to="/projects" className="btn btn-ghost">
+              <span>See the work</span>
+              <span className="arrow" aria-hidden="true">&#8594;</span>
+            </Link>
           </div>
         </div>
       </section>
 
       <ClosingCta
-        heading={<>Have a space <span className="ob">in mind?</span></>}
+        heading={<>Have a space <span className="c-primary">in mind?</span></>}
         blurb="Tell us the discipline you need — or let us take the whole brief, from design through to maintenance."
       />
     </>

@@ -1,8 +1,8 @@
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import Nav from './components/Nav'
-import Footer from './components/Footer'
-import { useReveals, useNavScrollState, useScrollProgress, useDrift } from './hooks/useSiteBehaviour'
+import Header from './components/Header'
+import SiteFooter from './components/SiteFooter'
+import { useReveals, useNavScrollState, useScrollProgress } from './hooks/useSiteBehaviour'
 
 import Home from './pages/Home'
 import About from './pages/About'
@@ -10,6 +10,7 @@ import Services from './pages/Services'
 import ServiceDetail from './pages/ServiceDetail'
 import Projects from './pages/Projects'
 import ProjectDetail from './pages/ProjectDetail'
+import Blog from './pages/Blog'
 import StartAProject from './pages/StartAProject'
 import NotFound from './pages/NotFound'
 
@@ -32,16 +33,15 @@ function ScrollManager(): null {
 export default function App() {
   const { pathname } = useLocation()
 
-  // Shared behaviour ported from ss.js; reveals/drift re-bind per route.
+  // Shared scroll behaviour; reveals re-bind per route.
   useReveals([pathname])
-  useDrift([pathname])
   useNavScrollState()
   useScrollProgress()
 
   return (
-    <>
+    <div className="shell">
       <a className="skip" href="#main">Skip to content</a>
-      <Nav />
+      <Header />
       <ScrollManager />
       <main id="main">
         <Routes>
@@ -52,11 +52,12 @@ export default function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:slug" element={<ProjectDetail />} />
           <Route path="/project-detail" element={<Navigate to="/projects/residential-interior-fit-out" replace />} />
+          <Route path="/blog" element={<Blog />} />
           <Route path="/start-a-project" element={<StartAProject />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      <Footer />
-    </>
+      <SiteFooter />
+    </div>
   )
 }

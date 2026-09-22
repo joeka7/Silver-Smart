@@ -105,10 +105,10 @@ function guardRevealed(revealed: WeakSet<Element>): () => void {
   return () => mo.disconnect()
 }
 
-/** Nav solid-state past 40px — port of the onScroll toggle in ss.js. */
+/** Header solid-state past 40px: deepens the glass once the page has moved. */
 export function useNavScrollState() {
   useEffect(() => {
-    const nav = document.querySelector('.nav')
+    const nav = document.querySelector('.hdr')
     const onScroll = () => {
       if (nav) nav.classList.toggle('s', window.scrollY > 40)
     }
@@ -140,38 +140,4 @@ export function useScrollProgress() {
       bar.remove()
     }
   }, [])
-}
-
-/** Subtle hero/featured parallax — port of the [data-drift] ticker in ss.js. */
-export function useDrift(deps: DependencyList = []) {
-  useEffect(() => {
-    if (prefersReducedMotion()) return
-    const items = [...document.querySelectorAll<HTMLElement>('[data-drift]')]
-    if (!items.length) return
-
-    let raf: number | null = null
-    const tick = () => {
-      const vh = innerHeight
-      items.forEach((el) => {
-        const parent = el.parentElement
-        if (!parent) return
-        const p = parent.getBoundingClientRect()
-        const k = parseFloat(el.dataset.drift ?? '') || 0.06
-        const off = (p.top + p.height / 2 - vh / 2) * -k
-        el.style.transform = `translate3d(0,${off.toFixed(2)}px,0)`
-      })
-      raf = null
-    }
-    const queue = () => {
-      if (!raf) raf = requestAnimationFrame(tick)
-    }
-
-    tick()
-    addEventListener('scroll', queue, { passive: true })
-    return () => {
-      removeEventListener('scroll', queue)
-      if (raf) cancelAnimationFrame(raf)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps)
 }

@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import ImageSlot from '../components/ImageSlot'
-import { SectionHead, Masthead, ArrowLink } from '../components/Bits'
-import { CONTACT, SOCIALS } from '../data/site'
+import { SectionIndex, Masthead } from '../components/UI'
+import { CONTACT, SOCIALS, SECTORS } from '../data/site'
 import type { StyleWithVars } from '../types/css'
+import hero2 from '../imgs/image2.webp'
 
-const SECTOR_OPTIONS: string[] = ['Commercial', 'Corporate', 'Healthcare', 'Residential', 'Hospitality', 'Maintenance']
+const SECTOR_OPTIONS: string[] = SECTORS.map((s) => s.title)
 const SERVICE_OPTIONS: string[] = ['Property', 'Interior design', 'Fit-out', 'Maintenance']
 
 export default function StartAProject() {
@@ -16,8 +16,9 @@ export default function StartAProject() {
     setServices((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
 
   /**
-   * No backend is defined in the design, so the form composes a mailto: to the
-   * published address rather than silently discarding the enquiry.
+   * No backend is defined for this site, so the form composes a mailto: to the
+   * published address rather than silently discarding the enquiry. Behaviour is
+   * unchanged from the previous design — only the presentation is new.
    */
   const onSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
@@ -54,134 +55,231 @@ export default function StartAProject() {
     <>
       <Masthead
         n="05"
-        eyebrow="Contact"
-        title={<>Start a<br /><span className="ob">project</span></>}
+        eyebrow="Initiate a commission"
+        title={<>Start a <span className="c-primary">project.</span></>}
+        lede="Get in touch today — we are here to help. Whether the brief is a property, an interior design scheme, a full fit-out or a maintenance contract, tell us about the space and the timeline."
         meta={[
-          { label: 'Main office', value: 'Abu Dhabi, UAE' },
+          { label: 'Main office', value: CONTACT.office },
           { label: 'Call', value: CONTACT.phone.label },
-          { label: 'WhatsApp', value: CONTACT.mobile.label },
         ]}
-        kicker="Get in touch today — we are here to help. Tell us about the property, the brief and the timeline."
+        note="Abu Dhabi · United Arab Emirates"
       />
 
-      <section className="sect on-paper">
+      {/* ===== HERO BAND ===== */}
+      <section className="wrap" style={{ paddingBottom: 'var(--space-2xl)' }}>
+        <div className="frame frame-zoom" data-r style={{ width: '100%', aspectRatio: '21 / 9', minHeight: 260 }}>
+          <img src={hero2} alt="A Silver Smart delivered interior" loading="lazy" decoding="async" />
+          <div className="glass frame-cap frame-cap-dock">
+            <div className="flex-between gap-sm" style={{ justifyContent: 'flex-start' }}>
+              <span className="dot dot-pulse" aria-hidden="true"></span>
+              <div>
+                <span className="t-label c-muted" style={{ display: 'block', fontSize: '0.625rem' }}>
+                  Main office
+                </span>
+                <span className="t-sm" style={{ fontSize: '0.9rem' }}>{CONTACT.office}</span>
+              </div>
+            </div>
+            <span className="t-label c-accent">Every space counts</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FORM + CONTACT RAIL ===== */}
+      <section className="section surface-base" style={{ paddingTop: 0 }}>
         <div className="wrap">
-          <SectionHead n="01" title="Send us a message" note="We reply by email" />
-          <div className="two">
-            <div className="a-wide">
-              <form className="form" id="ssform" noValidate onSubmit={onSubmit}>
-                <div className="fld">
-                  <label htmlFor="f-name">Name</label>
-                  <input id="f-name" name="name" type="text" placeholder="Full name" required />
+          <div className="split split-start">
+            {/* Contact rail */}
+            <div className="col-5 stack-lg" data-r>
+              <div className="panel">
+                <div className="panel-head">
+                  <span className="t-label c-accent">01 // Office</span>
+                  <span className="t-label c-muted">UAE</span>
                 </div>
-                <div className="fld">
-                  <label htmlFor="f-email">Email</label>
-                  <input id="f-email" name="email" type="email" placeholder="you@company.com" required />
-                </div>
-                <div className="fld">
-                  <label htmlFor="f-phone">Phone</label>
-                  <input id="f-phone" name="phone" type="tel" placeholder="+971" />
-                </div>
-                <div className="fld">
-                  <label htmlFor="f-loc">Location</label>
-                  <input id="f-loc" name="location" type="text" placeholder="Emirate / area" />
-                </div>
-                <div className="fld full">
-                  <label htmlFor="f-sector">Sector</label>
-                  <select id="f-sector" name="sector" defaultValue="Commercial">
-                    {SECTOR_OPTIONS.map((o) => <option key={o}>{o}</option>)}
-                  </select>
-                </div>
-
-                <fieldset className="fld full" style={{ borderBottom: 0 }}>
-                  <legend className="fld-legend" style={{ marginBottom: 12 }}>Service required</legend>
-                  <div className="chips">
-                    {SERVICE_OPTIONS.map((o) => (
-                      <label key={o}>
-                        <input
-                          type="checkbox"
-                          name="service"
-                          value={o}
-                          checked={services.includes(o)}
-                          onChange={() => toggleService(o)}
-                        />
-                        <span>{o}</span>
-                      </label>
-                    ))}
+                <div className="panel-row">
+                  <div className="flex-between gap-sm" style={{ justifyContent: 'flex-start' }}>
+                    <span className="dot" aria-hidden="true" style={{ borderRadius: 0 }}></span>
+                    <span className="t-sm" style={{ fontSize: '1.05rem' }}>{CONTACT.office}</span>
                   </div>
-                </fieldset>
-
-                <div className="fld full">
-                  <label htmlFor="f-msg">About the project</label>
-                  <textarea id="f-msg" name="message" placeholder="Space, scope, timeline"></textarea>
-                </div>
-
-                <div
-                  className="full"
-                  style={{ marginTop: 'clamp(22px,3vw,36px)', display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center' }}
-                >
-                  <button type="submit" className="btn btn-fill">Send request</button>
-                  <p className="meta dim" id="ssnote" role="status">
-                    {status || <>Or email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></>}
+                  <p className="t-body c-dim" style={{ paddingLeft: '1rem' }}>
+                    {CONTACT.address.map((line, i) => (
+                      <span key={line}>
+                        {line}
+                        {i < CONTACT.address.length - 1 && <br />}
+                      </span>
+                    ))}
                   </p>
                 </div>
-              </form>
+              </div>
+
+              <div className="panel">
+                <div className="panel-head">
+                  <span className="t-label c-accent">02 // Direct channels</span>
+                  <span className="t-label c-muted">@</span>
+                </div>
+                <div className="panel-row">
+                  <span className="t-label c-muted" style={{ fontSize: '0.625rem' }}>Telephone</span>
+                  <a className="t-sm" style={{ fontSize: '1.05rem' }} href={CONTACT.phone.href}>
+                    {CONTACT.phone.label}
+                  </a>
+                  <a className="t-label c-dim" href={CONTACT.whatsapp.href}>{CONTACT.whatsapp.label}</a>
+                </div>
+                <div className="panel-row">
+                  <span className="t-label c-muted" style={{ fontSize: '0.625rem' }}>Electronic enquiries</span>
+                  <a className="t-label" href={`mailto:${CONTACT.email}`} style={{ color: 'var(--on-surface)' }}>
+                    {CONTACT.email}
+                  </a>
+                </div>
+                <div className="panel-row">
+                  <span className="t-label c-muted" style={{ fontSize: '0.625rem' }}>Follow</span>
+                  <div
+                    className="flex-between"
+                    style={{ justifyContent: 'flex-start', gap: 'var(--space-md)' }}
+                  >
+                    {SOCIALS.map((s) => (
+                      <a key={s.href} className="t-label" href={s.href} target="_blank" rel="noopener noreferrer">
+                        {s.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="panel">
+                <div className="panel-head">
+                  <span className="t-label c-accent">03 // Disciplines</span>
+                  <span className="t-label c-muted">Four</span>
+                </div>
+                <div className="accred">
+                  {SERVICE_OPTIONS.map((s) => (
+                    <div key={s}>
+                      <div className="t-label c-primary" style={{ fontWeight: 600 }}>{s}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div className="b-narrow stack">
-              <div style={{ width: '100%' }}>
-                <p className="meta dim" style={{ marginBottom: 14 }}>Main office</p>
-                <p className="d4">Abu Dhabi<br />United Arab Emirates</p>
-              </div>
-              <hr className="hr" style={{ width: '100%' }} />
-              <div style={{ width: '100%' }}>
-                <p className="meta dim" style={{ marginBottom: 14 }}>Our location</p>
-                <p>{CONTACT.address[0]}<br />{CONTACT.address[1]}</p>
-              </div>
-              <hr className="hr" style={{ width: '100%' }} />
-              <div style={{ width: '100%' }}>
-                <p className="meta dim" style={{ marginBottom: 14 }}>Contact</p>
-                <p>
-                  <a href={CONTACT.phone.href}>{CONTACT.phone.label}</a><br />
-                  <a href={CONTACT.whatsapp.href}>{CONTACT.whatsapp.label}</a><br />
-                  <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
-                </p>
-              </div>
-              <hr className="hr" style={{ width: '100%' }} />
-              <div style={{ width: '100%' }}>
-                <p className="meta dim" style={{ marginBottom: 14 }}>Follow</p>
-                <p>
-                  {SOCIALS.map((s, i) => (
-                    <span key={s.href}>
-                      <a href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a>
-                      {i < SOCIALS.length - 1 && ' · '}
+            {/* Enquiry form */}
+            <div className="col-7" data-r style={{ '--dl': '.08s' } as StyleWithVars}>
+              <div className="form-panel">
+                <div className="form-head">
+                  <div>
+                    <span className="t-label c-accent" style={{ display: 'block' }}>Project enquiry</span>
+                    <h2 className="t-md" style={{ marginTop: '0.25rem' }}>Send us a message</h2>
+                  </div>
+                  <div className="badge-glass">
+                    <span className="dot" aria-hidden="true"></span>
+                    <span>We reply by email</span>
+                  </div>
+                </div>
+
+                <form className="form" id="ssform" noValidate onSubmit={onSubmit}>
+                  <div className="form-two">
+                    <div className="field">
+                      <label htmlFor="f-name">
+                        Name <span className="c-accent">*</span>
+                      </label>
+                      <input id="f-name" name="name" type="text" placeholder="Full name" required />
+                    </div>
+                    <div className="field">
+                      <label htmlFor="f-email">
+                        Email <span className="c-accent">*</span>
+                      </label>
+                      <input id="f-email" name="email" type="email" placeholder="you@company.com" required />
+                    </div>
+                  </div>
+
+                  <div className="form-two">
+                    <div className="field">
+                      <label htmlFor="f-phone">Phone</label>
+                      <input id="f-phone" name="phone" type="tel" placeholder="+971" />
+                    </div>
+                    <div className="field">
+                      <label htmlFor="f-loc">Location</label>
+                      <input id="f-loc" name="location" type="text" placeholder="Emirate / area" />
+                    </div>
+                  </div>
+
+                  <div className="field">
+                    <label htmlFor="f-sector">Sector</label>
+                    <select id="f-sector" name="sector" defaultValue={SECTOR_OPTIONS[0]}>
+                      {SECTOR_OPTIONS.map((o) => <option key={o}>{o}</option>)}
+                    </select>
+                  </div>
+
+                  <div className="field">
+                    <fieldset>
+                      <legend className="field-legend">Service required</legend>
+                      <div className="opts">
+                        {SERVICE_OPTIONS.map((o) => (
+                          <label className="opt" key={o}>
+                            <input
+                              type="checkbox"
+                              name="service"
+                              value={o}
+                              checked={services.includes(o)}
+                              onChange={() => toggleService(o)}
+                            />
+                            <span>{o}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                  </div>
+
+                  <div className="field">
+                    <label htmlFor="f-msg">About the project</label>
+                    <textarea
+                      id="f-msg"
+                      name="message"
+                      rows={4}
+                      placeholder="Space, scope, timeline"
+                    ></textarea>
+                  </div>
+
+                  <div className="form-submit">
+                    <button type="submit" className="btn btn-primary">
+                      <span>Send request</span>
+                      <span className="arrow" aria-hidden="true">&#8594;</span>
+                    </button>
+                    <p className="t-label c-muted" id="ssnote" role="status">
+                      {status || <>Or email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></>}
+                    </p>
+                  </div>
+
+                  <div className="form-note">
+                    <span>
+                      Tell us about the property, the brief and the timeline — the same team that designs the space is
+                      accountable for building and maintaining it.
                     </span>
-                  ))}
-                </p>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="band fr">
-        <ImageSlot placeholder="Office / project image — wide crop" alt="Office project — wide crop" />
-      </div>
-
-      <section className="sect on-ink">
+      {/* ===== CLOSING NOTE ===== */}
+      <section className="section surface-lowest" style={{ borderTop: '1px solid var(--hairline)' }}>
         <div className="wrap">
-          <div className="two">
-            <div className="a-wide" data-r>
-              <h2 className="d2">
-                We provide the <span className="ob">best service</span> in interior design and maintenance.
+          <SectionIndex n="06" title="Every space counts" note="Design through maintenance" />
+          <div className="split">
+            <div className="col-7" data-r>
+              <h2 className="t-lg">
+                We provide the <span className="c-primary">best service</span> in interior design and maintenance.
               </h2>
             </div>
-            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
-              <p className="dim">
-                Every space counts. Whether the brief is a single room, a full fit-out or a maintenance contract, it is
-                handled by the same team to the same standard.
+            <div className="col-5 stack" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
+              <p className="t-body c-dim">
+                Whether the brief is a single room, a full fit-out or a maintenance contract, it is handled by the same
+                team to the same standard.
               </p>
-              <ArrowLink to="/services">All services</ArrowLink>
+              <a className="tlink" href={CONTACT.phone.href}>
+                <span className="tlink-rule" aria-hidden="true"></span>
+                <span>Call {CONTACT.phone.label}</span>
+                <span className="arrow" aria-hidden="true">&#8594;</span>
+              </a>
             </div>
           </div>
         </div>

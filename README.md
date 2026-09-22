@@ -1,7 +1,7 @@
 # Silver Smart
 
-React implementation of the completed Claude Design for Silver Smart — a property,
-interior design, fit-out and general maintenance company based in Abu Dhabi, UAE.
+React implementation of the Silver Smart website — a property, interior design,
+fit-out and general maintenance company based in Abu Dhabi, UAE.
 
 ## Stack
 
@@ -14,45 +14,52 @@ npm install
 npm run dev      # dev server on :5173
 npm run build    # production build to dist/
 npm run preview  # serve the production build
+npm run typecheck
 ```
 
-## Design source
+## Design system — "Architectural Prestige"
 
-The authoritative design lives in [`claude design/project/`](claude%20design/project/).
-`src/styles/ss.css` is that bundle's `ss.css` copied **verbatim** — it is the design
-system (tokens, type scale, grid, components, responsive rules) and should be edited
-with care. `src/styles/home.css` is the home page's scoped `<style>` block, also verbatim.
+The visual system is a React implementation of the Stitch design export. Its tokens
+(colour, type scale, spacing) are transcribed from that export's `DESIGN.md`.
 
-`src/styles/app.css` holds only the additions React requires: the `ImageSlot` rules
-(the prototype styled an `<image-slot>` custom element by tag name), the skip link,
-and a containment fix for the checkbox group.
+- **`src/styles/theme.css`** — tokens and primitives: colour roles, the type scale,
+  spacing, buttons, links, image frames, reveal animation.
+- **`src/styles/layout.css`** — structure: header/drawer, footer, hero, and the
+  repeating page blocks (stat ledger, service rows, sector blocks, forms, panels).
 
-### Brand
+### Key characteristics
 
-`--brand: #e8762b`. Used structurally, not just on hover: scroll-progress rule, logo
-mark, section-header rules, caption ticks, active nav, numerals, primary CTA, checked
-chips, focus states and hover borders.
+- **Dark architectural canvas.** `#121316` base, with `#0d0e11` / `#1b1b1f` / `#1f1f23`
+  as the elevation steps. Depth comes from tonal layering and 1px hairlines, not shadows.
+- **Sharp geometry.** Border radius is `0` throughout; the only rounded elements are
+  status dots.
+- **Typography.** `Syne` for headlines, `Plus Jakarta Sans` for body, `JetBrains Mono`
+  for technical labels, indices and metadata.
+- **Brand orange `#e8762b`** (`--primary-container`) is reserved for focal points:
+  section indices (`01 //`), active nav, primary CTAs, hairline accents and numerals —
+  never large background fills.
 
 ## Architecture
 
 ```
 src/
-  components/   Nav, Footer, ClosingCta, ImageSlot, Bits (SectionHead, Masthead, …)
+  components/   Header, SiteFooter, HeroMedia, ClosingCta,
+                UI (SectionIndex, Masthead, Ledger, EditorialRows, FieldGrid, …)
   pages/        Home, About, Services, ServiceDetail, Projects, ProjectDetail,
-                StartAProject, NotFound
-  hooks/        useSiteBehaviour — port of the prototype's ss.js
-  data/         site.js, services.js — all page copy
-  styles/       ss.css (verbatim), home.css (verbatim), app.css (additions)
+                Blog, StartAProject, NotFound
+  hooks/        useSiteBehaviour — scroll reveals, nav state, drift, progress
+  data/         site.ts, services.ts — all page copy
+  styles/       theme.css (tokens + primitives), layout.css (structure)
 ```
 
-The four service pages share one `ServiceDetail` template driven by `data/services.js`,
-since they are structurally identical in the design.
+The four service pages share one `ServiceDetail` template driven by `data/services.ts`,
+since they are structurally identical.
 
-### Behaviour ported from `ss.js`
+### Content
 
-Scroll reveals (rect-based, with `data-stagger` delays), nav scroll state, mobile menu
-with scroll lock, linked service index, testimonial tabs, parallax drift, scroll-progress
-rule. `prefers-reduced-motion` is honoured throughout.
+All copy lives in `src/data/`. Company facts (address, phone, email, socials) are in
+`CONTACT`/`SOCIALS` in `site.ts` and are the single source of truth — the header,
+footer, contact page and CTAs all read from there.
 
 ## Routes
 
@@ -62,26 +69,45 @@ rule. `prefers-reduced-motion` is honoured throughout.
 | `/about` | About |
 | `/services` | Services |
 | `/services/:slug` | Property · Interior Design · Fit-Out · Maintenance |
-| `/projects` | Projects (six sectors, `#s01`–`#s06` anchors) |
+| `/projects` | Projects (six sectors, filterable, `#s01`–`#s06` anchors) |
 | `/projects/:slug` | Project detail |
+| `/blog` | Journal (see below) |
 | `/start-a-project` | Contact |
 
-`/project-detail` redirects to the project detail route for parity with the design bundle.
+`/project-detail` redirects to the project detail route.
+
+### Blog
+
+`/blog` is a **shell**: the site has no published articles and no blog data source, so
+the page carries the design system and the route without inventing editorial content.
+When posts exist, render them in place of the notice in `pages/Blog.tsx` — the section
+and card primitives the listing needs are already used on that page.
+
+## Contact form
+
+`StartAProject` has no backend. The form composes a `mailto:` to the published address
+with every field filled in, rather than silently discarding an enquiry. Name and email
+are validated before submit. The footer's subscribe field works the same way.
+
+If a form backend is added later, replace the `window.location.href` assignment in
+`onSubmit` — the field markup and validation can stay as they are.
 
 ## Images
 
-The design uses `<image-slot>` placeholders rather than real photography, so no image
-assets were shipped in the bundle. `ImageSlot` renders a labelled placeholder carrying
-the design's art direction note, at the exact aspect ratio the layout specifies.
+Photography lives in `src/imgs/` and is imported directly, so Vite fingerprints and
+optimises it. `HeroMedia` composites the branded hero video (`src/videos/hero-vid.mp4`)
+with a five-frame still sequence that crossfades over it; both are suppressed under
+`prefers-reduced-motion`.
 
-To add real photography, pass `src`:
+Aspect ratios are owned by the containing `.frame` / `.card-media` / `.sector-media`
+element in CSS, so swapping an image never changes the layout.
 
-```jsx
-<ImageSlot src="/img/hero.jpg" alt="…" placeholder="…" />
-```
+## Accessibility & responsiveness
 
-Aspect ratios are owned by the parent `.fr` frame in CSS, so images drop in without
-layout changes.
+- Verified free of horizontal overflow at 1920 / 1440 / 1024 / 768 / 390 / 360px.
+- `prefers-reduced-motion` disables reveals, the hero sequence and the pulse animation.
+- Touch targets are raised to 44px under `pointer: coarse`.
+- The mobile drawer traps scroll, closes on Escape and on navigation.
 
 ## Deployment
 

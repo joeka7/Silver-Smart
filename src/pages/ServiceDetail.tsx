@@ -1,9 +1,20 @@
 import { useParams, Navigate, Link } from 'react-router-dom'
-import ImageSlot from '../components/ImageSlot'
 import ClosingCta from '../components/ClosingCta'
-import { SectionHead, Masthead, Caption, EditorialRows, ArrowLink } from '../components/Bits'
+import { SectionIndex, Masthead, EditorialRows, TextLink } from '../components/UI'
 import { SERVICES, isServiceSlug } from '../data/services'
 import type { StyleWithVars } from '../types/css'
+import hero1 from '../imgs/image.webp'
+import hero2 from '../imgs/image2.webp'
+import hero3 from '../imgs/image3.webp'
+import hero4 from '../imgs/image4.webp'
+import hero5 from '../imgs/image5.webp'
+
+const BAND_IMAGE: Record<string, string> = {
+  property: hero1,
+  'interior-design': hero2,
+  'fit-out': hero3,
+  maintenance: hero4,
+}
 
 /** One template for all four service pages — they share structure in the design. */
 export default function ServiceDetail() {
@@ -19,72 +30,86 @@ export default function ServiceDetail() {
         n={svc.n}
         eyebrow="Service"
         title={svc.title}
+        lede={svc.kicker}
         meta={[
           { label: 'Discipline', value: svc.title },
           { label: 'Region', value: 'UAE' },
           { label: 'Sectors', value: 'Six' },
         ]}
-        kicker={svc.kicker}
+        note="Property · Interiors · Fit-Out · Maintenance"
       />
 
-      <div className="band band-tall fr">
-        <ImageSlot placeholder={svc.bandSlot} alt={svc.bandSlot} />
-      </div>
-
-      <section className="sect on-paper">
-        <div className="wrap">
-          <SectionHead n="01" title="Overview" note={svc.title} />
-          <div className="two">
-            <div className="a-wide" data-r>
-              <h2 className="d2">{svc.lead}</h2>
+      {/* ===== BAND ===== */}
+      <section className="wrap" style={{ paddingBottom: 'var(--space-2xl)' }}>
+        <div className="frame frame-zoom" data-r style={{ width: '100%', aspectRatio: '21 / 9', minHeight: 240 }}>
+          <img src={BAND_IMAGE[slug]} alt={svc.bandSlot} loading="lazy" decoding="async" />
+          <div className="glass frame-cap frame-cap-dock">
+            <div>
+              <span className="t-label c-muted" style={{ display: 'block', fontSize: '0.625rem' }}>Discipline</span>
+              <span className="t-sm" style={{ fontSize: '0.9rem' }}>{svc.title}</span>
             </div>
-            <div className="b-narrow stack" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
-              {svc.body.map((para, i) => (
-                <p key={para} className={i > 0 ? 'dim' : undefined}>{para}</p>
+            <span className="t-label c-accent">{svc.n} / 04</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== OVERVIEW ===== */}
+      <section className="section surface-lowest" style={{ paddingTop: 0 }}>
+        <div className="wrap" style={{ paddingTop: 'var(--space-2xl)' }}>
+          <SectionIndex n="01" title="Overview" note={svc.title} />
+
+          <div className="split">
+            <div className="col-7" data-r>
+              <h2 className="t-lg">{svc.lead}</h2>
+            </div>
+            <div className="col-5 stack" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
+              {svc.body.map((para) => (
+                <p key={para} className="t-body c-dim">{para}</p>
               ))}
-              <ArrowLink to="/start-a-project">{svc.ctaLabel}</ArrowLink>
+              <TextLink to="/start-a-project" rule>{svc.ctaLabel}</TextLink>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="sect on-ink">
+      {/* ===== SCOPE ===== */}
+      <section className="section surface-base">
         <div className="wrap">
-          <SectionHead n="02" title="What it covers" note="Scope" />
+          <SectionIndex n="02" title="What it covers" note="Scope" />
           <EditorialRows items={svc.scope} />
 
-          <div className="two" style={{ marginTop: 'clamp(44px,6vw,90px)' }}>
-            <div className="a">
-              <div className="fr" style={{ aspectRatio: '4/3' }} data-r="mask">
-                <ImageSlot placeholder={svc.detailSlot} alt={svc.detailSlot} />
+          <div className="split mt-xl" style={{ marginTop: 'clamp(2.5rem, 5vw, 4rem)' }}>
+            <div className="col-6" data-r>
+              <div className="frame frame-zoom" style={{ aspectRatio: '4 / 3' }}>
+                <img src={hero5} alt={svc.detailSlot} loading="lazy" decoding="async" />
               </div>
-              <Caption left={svc.title} right="Detail" />
             </div>
-            <div className="b stack" data-r>
-              <p className="meta dim">Sectors served</p>
-              <p className="d4">Commercial · Corporate · Healthcare · Residential · Hospitality</p>
-              <p className="dim mw">
+            <div className="col-6 stack" data-r style={{ '--dl': '.08s' } as StyleWithVars}>
+              <span className="t-label c-muted">Sectors served</span>
+              <h3 className="t-md">Commercial · Corporate · Healthcare · Residential · Hospitality</h3>
+              <p className="t-body c-dim">
                 Every space counts. The same team, the same standard, whichever sector the brief sits in.
               </p>
-              <ArrowLink to="/projects">Selected work</ArrowLink>
+              <TextLink to="/projects" rule>Selected work</TextLink>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="on-ink2" style={{ paddingBlock: 'clamp(10px,2vw,20px)' }}>
+      {/* ===== PAGER ===== */}
+      <section className="surface-lowest">
         <div className="wrap">
-          <div className="next">
-            <span className="meta dim">Next service</span>
-            <Link to={svc.next.to} className="d3">
-              {svc.next.label} <span className="ar">&#8594;</span>
+          <div className="pager">
+            <span className="t-label c-muted">Next service</span>
+            <Link to={svc.next.to}>
+              {svc.next.label} <span aria-hidden="true">&#8594;</span>
             </Link>
           </div>
         </div>
       </section>
 
       <ClosingCta
-        heading={<>Have a space <span className="ob">in mind?</span></>}
+        heading={<>Have a space <span className="c-primary">in mind?</span></>}
         blurb="Tell us about the property, the brief and the timeline."
       />
     </>

@@ -91,11 +91,13 @@ export const NAV: NavLinkItem[] = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
   { label: 'Services', to: '/services' },
-  { label: 'Work', to: '/projects' },
+  { label: 'Projects', to: '/projects' },
+  { label: 'Contact Us', to: '/start-a-project' },
+  { label: 'Blog', to: '/blog' },
 ]
 
-/** Contact — rendered by Nav as a button rather than a plain link. Same destination as before. */
-export const NAV_CTA: NavLinkItem = { label: 'Contact', to: '/start-a-project' }
+/** Header action — rendered as a bordered button rather than a plain nav link. */
+export const NAV_CTA: NavLinkItem = { label: 'Start a project', to: '/start-a-project' }
 
 export const SERVICE_LINKS: NavLinkItem[] = [
   { label: 'Property', to: '/services/property' },
