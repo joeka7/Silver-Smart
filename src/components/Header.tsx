@@ -38,7 +38,6 @@ export default function Header() {
             <img className="hdr-logo" src={logo} alt="" width="931" height="1024" />
             <span className="hdr-word">
               <span className="hdr-name">Silver Smart</span>
-              <span className="hdr-sub">Property · Interiors</span>
             </span>
           </Link>
 

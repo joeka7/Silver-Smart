@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { CONTACT } from '../data/site'
+import closingVid from '../videos/hero-vid.mp4'
 
 interface ClosingCtaProps {
   /** Usually a fragment with a highlighted span, so ReactNode. */
@@ -18,6 +19,18 @@ export default function ClosingCta({ heading, blurb, eyebrow = 'Commence a dialo
     <section className="section">
       <div className="wrap">
         <div className="closing" style={{ padding: 'clamp(1.5rem, 4vw, 4rem)' }}>
+          <video
+            className="closing-video"
+            src={closingVid}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            tabIndex={-1}
+          />
+          <div className="closing-scrim" aria-hidden="true"></div>
           <div className="blueprint" aria-hidden="true"></div>
           <div className="closing-grid">
             <div className="closing-a">

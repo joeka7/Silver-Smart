@@ -3,7 +3,8 @@ import HeroMedia from '../components/HeroMedia'
 import { SectionIndex, TextLink } from '../components/UI'
 import { HOME_SERVICES, HOME_WORK, WHY, CONTACT } from '../data/site'
 import type { StyleWithVars } from '../types/css'
-import hero2 from '../imgs/image2.webp'
+import introImg from '../imgs/Introduction.webp'
+import closingVid from '../videos/hero-vid.mp4'
 import hero3 from '../imgs/image3.webp'
 import hero4 from '../imgs/image4.webp'
 import hero5 from '../imgs/image5.webp'
@@ -105,7 +106,7 @@ export default function Home() {
         <div className="wrap">
           <SectionIndex n="01" title="Introduction" note="Where we build your visions" />
 
-          <div className="split">
+          <div className="split split-fill">
             <div className="col-6 stack-lg">
               <h2 className="t-lg" data-r>
                 We create spaces where <span className="c-primary">design, functionality</span> and precision come
@@ -148,8 +149,8 @@ export default function Home() {
             </div>
 
             <div className="col-6" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
-              <div className="frame frame-zoom" style={{ aspectRatio: '16 / 11' }}>
-                <img src={hero2} alt="A Silver Smart interior, delivered end to end" loading="lazy" decoding="async" />
+              <div className="frame frame-zoom frame-fill">
+                <img src={introImg} alt="A Silver Smart interior, delivered end to end" loading="lazy" decoding="async" />
                 <div className="glass frame-cap">
                   <div>
                     <span className="t-label c-accent" style={{ display: 'block' }}>Selected work</span>
@@ -341,7 +342,19 @@ export default function Home() {
       {/* ===== 04 — CLOSING ===== */}
       <section className="section surface-lowest">
         <div className="wrap">
-          <div className="closing" style={{ padding: 'clamp(1.5rem, 4vw, 4rem)', background: 'var(--surface-container)' }}>
+          <div className="closing" style={{ padding: 'clamp(1.5rem, 4vw, 4rem)' }}>
+            <video
+              className="closing-video"
+              src={closingVid}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+              tabIndex={-1}
+            />
+            <div className="closing-scrim" aria-hidden="true"></div>
             <div className="blueprint" aria-hidden="true"></div>
             <div className="closing-grid">
               <div className="closing-a">
