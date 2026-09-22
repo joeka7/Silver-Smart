@@ -13,10 +13,6 @@
 .hero-side{grid-column:9/13;grid-row:1/3;align-self:end;display:flex;flex-direction:column;gap:13px;color:var(--slate)}
 .hero-side .l{display:flex;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--ld-2)}
 .hero-side .l b{font-weight:400;color:var(--paper)}
-.hero-side .cue{display:flex;align-items:center;gap:12px;margin-top:6px}
-.hero-side .bar{flex:1;max-width:80px;height:1px;background:var(--ld);position:relative;overflow:hidden}
-.hero-side .bar::after{content:"";position:absolute;inset:0;background:var(--accent-lt);transform:translateX(-100%);animation:sweep 3s var(--ease) infinite}
-@keyframes sweep{0%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
 @media(max-width:1000px){
 .hero{min-height:auto;flex-direction:column}
 .hero-img{position:relative;width:100%;height:44svh;right:auto;margin-top:calc(84px + clamp(12px,3vh,28px))}

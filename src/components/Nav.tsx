@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import Logo from './Logo'
-import { NAV, CONTACT } from '../data/site'
+import { NAV, NAV_CTA, CONTACT } from '../data/site'
 
 export default function Nav() {
   const [open, setOpen] = useState<boolean>(false)
@@ -33,10 +33,15 @@ export default function Nav() {
           </Link>
           <div className="nlinks">
             {NAV.map((item) => (
-              <NavLink key={item.to} to={item.to}>
+              <NavLink key={item.to} to={item.to} end={item.to === '/'}>
                 {item.label}
               </NavLink>
             ))}
+          </div>
+          <div className="nav-actions">
+            <NavLink to={NAV_CTA.to} className="btn btn-brand nav-cta">
+              {NAV_CTA.label}
+            </NavLink>
           </div>
           <button
             className="burger"
@@ -58,6 +63,11 @@ export default function Nav() {
               <Link to={item.to} tabIndex={open ? 0 : -1}>{item.label}</Link>
             </li>
           ))}
+          <li className="mnav-cta">
+            <Link to={NAV_CTA.to} className="btn btn-brand" tabIndex={open ? 0 : -1}>
+              {NAV_CTA.label}
+            </Link>
+          </li>
         </ul>
         <div className="mfoot meta dim">
           <span>Abu Dhabi — United Arab Emirates</span>

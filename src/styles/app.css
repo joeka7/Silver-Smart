@@ -27,7 +27,7 @@ a.fr-zoom:hover .islot,.fr-zoom:hover .islot{transform:scale(1.04)}
 /* Brand lockup — the real monogram replaces the placeholder square ss.css
    draws via .mark::before, at the same optical size and spacing. */
 .mark.has-logo::before{content:none}
-.mark-logo{display:inline-block;width:auto;height:1.65em;margin-right:.6em;vertical-align:-.45em}
+.mark-logo{display:block;width:auto;height:1.65em;flex:0 0 auto}
 
 /* Hero nav scrim — the hero panel runs under the transparent nav
    (.hero-img z-index:0, .nav z-index:70), so bright highlights in the panel

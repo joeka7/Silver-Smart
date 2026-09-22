@@ -88,11 +88,14 @@ export const SOCIALS: SocialLink[] = [
 ]
 
 export const NAV: NavLinkItem[] = [
-  { label: 'Work', to: '/projects' },
-  { label: 'Services', to: '/services' },
+  { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
-  { label: 'Contact', to: '/start-a-project' },
+  { label: 'Services', to: '/services' },
+  { label: 'Work', to: '/projects' },
 ]
+
+/** Contact — rendered by Nav as a button rather than a plain link. Same destination as before. */
+export const NAV_CTA: NavLinkItem = { label: 'Contact', to: '/start-a-project' }
 
 export const SERVICE_LINKS: NavLinkItem[] = [
   { label: 'Property', to: '/services/property' },

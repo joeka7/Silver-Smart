@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import Logo from './Logo'
-import { NAV, SERVICE_LINKS, SOCIALS, CONTACT } from '../data/site'
+import { NAV, NAV_CTA, SERVICE_LINKS, SOCIALS, CONTACT } from '../data/site'
 
 export default function Footer() {
   return (
@@ -19,7 +19,7 @@ export default function Footer() {
           <div>
             <h4>Navigate</h4>
             <ul>
-              {NAV.map((i) => (
+              {[...NAV, NAV_CTA].map((i) => (
                 <li key={i.to}><Link to={i.to}>{i.label}</Link></li>
               ))}
             </ul>

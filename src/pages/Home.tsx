@@ -39,7 +39,6 @@ export default function Home() {
               <span className="l"><span>Location</span><b>Abu Dhabi, UAE</b></span>
               <span className="l"><span>Sectors</span><b>Six</b></span>
               <span className="l"><span>Discipline</span><b>Design &amp; Build</b></span>
-              <span className="cue"><span className="bar"></span><span>Scroll</span></span>
             </div>
           </div>
         </div>
