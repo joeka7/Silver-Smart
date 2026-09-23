@@ -18,7 +18,6 @@ export default function SiteFooter() {
           <div className="ftr-brand">
             <Link to="/" className="hdr-mark" aria-label="Silver Smart, home">
               <img className="hdr-logo" src={logo} alt="" width="931" height="1024" />
-              <span className="hdr-name">Silver Smart</span>
             </Link>
             <p className="t-small c-dim" style={{ maxWidth: '34ch' }}>
               A property, interior design, fit-out and general maintenance company based in the United Arab

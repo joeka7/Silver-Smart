@@ -355,7 +355,6 @@ export default function Home() {
               tabIndex={-1}
             />
             <div className="closing-scrim" aria-hidden="true"></div>
-            <div className="blueprint" aria-hidden="true"></div>
             <div className="closing-grid">
               <div className="closing-a">
                 <div className="sindex t-label" data-r style={{ marginBottom: 0 }}>

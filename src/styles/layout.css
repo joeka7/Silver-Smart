@@ -718,19 +718,6 @@ body.mopen { overflow: hidden; }
   );
 }
 
-/* Blueprint grid backdrop */
-.blueprint {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.1;
-  background-image:
-    linear-gradient(to right, #808080 1px, transparent 1px),
-    linear-gradient(to bottom, #808080 1px, transparent 1px);
-  background-size: 4rem 4rem;
-}
-
 .closing-b .btn { width: 100%; }
 @media (min-width: 640px) { .closing-b .btn { width: auto; } }
 
@@ -748,6 +735,8 @@ body.mopen { overflow: hidden; }
   margin-bottom: var(--space-xl);
 }
 .ftr-brand { grid-column: span 4; display: flex; flex-direction: column; gap: var(--space-md); }
+/* The footer mark stands alone without the wordmark, so it carries more size than the header's. */
+.ftr-brand .hdr-logo { height: 5.5rem; }
 .ftr-col { grid-column: span 2; display: flex; flex-direction: column; gap: var(--space-md); }
 .ftr-wide { grid-column: span 4; display: flex; flex-direction: column; gap: var(--space-md); }
 

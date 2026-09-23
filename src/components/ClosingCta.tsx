@@ -11,7 +11,7 @@ interface ClosingCtaProps {
 }
 
 /**
- * Closing CTA band — the blueprint-grid panel that ends every interior page.
+ * Closing CTA band — the video panel that ends every interior page.
  * Mirrors "SECTION 05 // FINAL STUDIO CALL TO ACTION" in the Stitch export.
  */
 export default function ClosingCta({ heading, blurb, eyebrow = 'Commence a dialogue' }: ClosingCtaProps) {
@@ -31,7 +31,6 @@ export default function ClosingCta({ heading, blurb, eyebrow = 'Commence a dialo
             tabIndex={-1}
           />
           <div className="closing-scrim" aria-hidden="true"></div>
-          <div className="blueprint" aria-hidden="true"></div>
           <div className="closing-grid">
             <div className="closing-a">
               <div className="sindex t-label" data-r style={{ marginBottom: 0 }}>
