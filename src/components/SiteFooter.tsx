@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import logo from '../imgs/logo.webp'
 import { NAV, SERVICE_LINKS, SOCIALS, CONTACT } from '../data/site'
+import { Button } from './UI'
 
 /**
  * Site footer — the four-column architectural register from the Stitch export.
@@ -71,7 +72,7 @@ export default function SiteFooter() {
                 Email address
               </label>
               <input id="ftr-email" name="email" type="email" placeholder="Email address" required />
-              <button type="submit">Send &#8594;</button>
+              <Button type="submit" variant="dark" icon={false}>Send &#8594;</Button>
             </form>
             <div className="t-label c-muted">
               <a href={CONTACT.phone.href}>{CONTACT.phone.label}</a>

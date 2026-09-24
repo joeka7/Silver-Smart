@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import ClosingCta from '../components/ClosingCta'
-import { SectionIndex, Masthead, FieldGrid } from '../components/UI'
+import { SectionIndex, Masthead, FieldGrid, Button } from '../components/UI'
 import { SPECIALISATION } from '../data/site'
 import { SERVICES, SERVICE_SLUGS } from '../data/services'
 import type { StyleWithVars } from '../types/css'
@@ -148,9 +148,7 @@ export default function Services() {
           <SectionIndex n="03" title="Our specialisation" note="Where our experience meets your needs" />
           <FieldGrid items={SPECIALISATION} />
           <div className="mt-xl" data-r>
-            <Link to="/projects" className="btn btn-ghost">
-              <span>See the work</span>
-            </Link>
+            <Button to="/projects" variant="dark">See the work</Button>
           </div>
         </div>
       </section>

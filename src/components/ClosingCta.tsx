@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { CONTACT } from '../data/site'
+import { Button } from './UI'
 import closingVid from '../videos/hero-vid.mp4'
 
 interface ClosingCtaProps {
@@ -41,12 +41,8 @@ export default function ClosingCta({ heading, blurb, eyebrow = 'Commence a dialo
               <p className="t-lede" data-r style={{ maxWidth: '46ch' }}>{blurb}</p>
             </div>
             <div className="closing-b" data-r>
-              <Link to="/start-a-project" className="btn btn-primary">
-                <span>Start a project</span>
-              </Link>
-              <a href={CONTACT.phone.href} className="btn btn-ghost">
-                <span>{CONTACT.phone.label}</span>
-              </a>
+              <Button to="/start-a-project">Start a project</Button>
+              <Button href={CONTACT.phone.href} variant="dark">{CONTACT.phone.label}</Button>
               <span className="t-label c-muted">{CONTACT.office}</span>
             </div>
           </div>

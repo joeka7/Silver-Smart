@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { SectionIndex, Masthead } from '../components/UI'
+import { SectionIndex, Masthead, Button } from '../components/UI'
 import { CONTACT, SOCIALS, SECTORS } from '../data/site'
 import type { StyleWithVars } from '../types/css'
 import hero2 from '../imgs/image2.webp'
@@ -238,9 +238,7 @@ export default function StartAProject() {
                   </div>
 
                   <div className="form-submit">
-                    <button type="submit" className="btn btn-primary">
-                      <span>Send request</span>
-                    </button>
+                    <Button type="submit">Send request</Button>
                     <p className="t-label c-muted" id="ssnote" role="status">
                       {status || <>Or email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></>}
                     </p>

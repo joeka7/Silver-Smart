@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import logo from '../imgs/logo.webp'
 import { NAV, NAV_CTA, CONTACT } from '../data/site'
+import { HeaderButton as Button } from './UI'
 
 /**
  * Fixed glassmorphic header, per the Stitch export.
  *
- * Desktop shows the full nav plus the bordered "Start a project" action;
+ * Desktop shows the full nav plus the "Start a project" pill action;
  * below 1100px both collapse into the burger-driven drawer. The drawer's
  * open state is mirrored onto <body> so layout.css can lock scrolling.
  */
@@ -50,10 +51,9 @@ export default function Header() {
           </nav>
 
           <div className="hdr-actions">
-            <Link to={NAV_CTA.to} className="hdr-cta">
-              <span className="dot" aria-hidden="true"></span>
-              <span>{NAV_CTA.label}</span>
-            </Link>
+            <Button to={NAV_CTA.to} className="hdr-cta">
+              {NAV_CTA.label}
+            </Button>
             <button
               className="burger"
               aria-label={open ? 'Close menu' : 'Menu'}
@@ -81,9 +81,9 @@ export default function Header() {
             </li>
           ))}
           <li className="mnav-cta">
-            <Link to={NAV_CTA.to} className="btn btn-primary" tabIndex={open ? 0 : -1}>
-              <span>{NAV_CTA.label}</span>
-            </Link>
+            <Button to={NAV_CTA.to} block tabIndex={open ? 0 : -1}>
+              {NAV_CTA.label}
+            </Button>
           </li>
         </ul>
         <div className="mnav-foot t-label">

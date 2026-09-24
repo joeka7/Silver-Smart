@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import HeroMedia from '../components/HeroMedia'
-import { SectionIndex, TextLink } from '../components/UI'
+import { SectionIndex, TextLink, Button } from '../components/UI'
 import { HOME_SERVICES, HOME_WORK, WHY, CONTACT } from '../data/site'
 import type { StyleWithVars } from '../types/css'
 import introImg from '../imgs/Introduction.webp'
@@ -74,12 +74,8 @@ export default function Home() {
               </p>
 
               <div className="hero-ctas" data-r style={{ '--dl': '.14s' } as StyleWithVars}>
-                <Link to="/projects" className="btn btn-primary">
-                  <span>Explore our work</span>
-                </Link>
-                <Link to="/about" className="btn btn-glass">
-                  <span>Our studio</span>
-                </Link>
+                <Button to="/projects">Explore our work</Button>
+                <Button to="/about" variant="light">Our studio</Button>
               </div>
             </div>
           </div>
@@ -316,9 +312,7 @@ export default function Home() {
                   ))}
                 </div>
 
-                <Link to="/start-a-project" className="btn btn-primary" style={{ width: '100%' }}>
-                  <span>Start a project</span>
-                </Link>
+                <Button to="/start-a-project" block>Start a project</Button>
               </div>
             </div>
           </div>
@@ -365,12 +359,8 @@ export default function Home() {
                   Let&apos;s build something exceptional. Tell us about the property, the brief and the timeline.
                 </p>
                 <div className="hero-ctas" data-r>
-                  <Link to="/start-a-project" className="btn btn-primary">
-                    <span>Start a project</span>
-                  </Link>
-                  <Link to="/services" className="btn btn-ghost">
-                    <span>All services</span>
-                  </Link>
+                  <Button to="/start-a-project">Start a project</Button>
+                  <Button to="/services" variant="dark">All services</Button>
                 </div>
               </div>
 

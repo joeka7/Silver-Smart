@@ -99,7 +99,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 ::selection { background: var(--primary-container); color: var(--surface-container-lowest); }
 :focus-visible { outline: 2px solid var(--primary-container); outline-offset: 3px; }
 
-/* Sharp geometry: the system is level 0 throughout. Only status dots round. */
+/* Sharp geometry: the system is level 0 throughout. Only status dots and .btn pills round. */
 input, select, textarea, button { border-radius: 0; }
 
 /* ============================================================================
@@ -227,45 +227,357 @@ p + p { margin-top: 1.05em; }
    Buttons & links
    ========================================================================== */
 
-.btn {
+/*
+ * ShinyButton — the 21st.dev reference's scoped CSS, hoisted here once.
+ * A conic arc sweeps the 1px border; on hover/focus it widens, speckle and
+ * sheen layers spin up and an inner glow breathes. The component's props map
+ * onto the --gleam-* custom properties; variants retune them to the palette.
+ */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@property --gradient-angle-offset {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@property --gradient-percent {
+  syntax: "<percentage>";
+  initial-value: 5%;
+  inherits: false;
+}
+@property --gradient-shine {
+  syntax: "<color>";
+  initial-value: white;
+  inherits: false;
+}
+
+.shiny-button {
+  --gleam-base: var(--surface-container-lowest);
+  --gleam-inset: var(--surface-container-low);
+  --gleam-label: var(--on-surface);
+  --gleam-accent: var(--primary-container);
+  --gleam-accent-soft: var(--primary);
+  --gleam-arc: 5%;
+  --gleam-radius: 32px;
+  --gleam-ease-duration: 0.8s;
+  --gleam-speckle-opacity: 0.4;
+  --gleam-sheen-opacity: 0.6;
+  --animation: shiny-gradient-angle linear infinite;
+  --duration: 3s;
+  --shadow-size: 2px;
+  --transition: var(--gleam-ease-duration) cubic-bezier(0.25, 1, 0.5, 1);
+  --gradient-percent: var(--gleam-arc);
+
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  outline-offset: 4px;
+  border: 1px solid transparent;
+  border-radius: var(--gleam-radius);
+  color: var(--gleam-label);
+  text-decoration: none;
+  background:
+    linear-gradient(var(--gleam-base), var(--gleam-base)) padding-box,
+    conic-gradient(
+      from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+      transparent,
+      var(--gleam-accent) var(--gradient-percent),
+      var(--gradient-shine) calc(var(--gradient-percent) * 2),
+      var(--gleam-accent) calc(var(--gradient-percent) * 3),
+      transparent calc(var(--gradient-percent) * 4)
+    ) border-box;
+  box-shadow: inset 0 0 0 1px var(--gleam-inset);
+  transition: var(--transition);
+  transition-property: --gradient-angle-offset, --gradient-percent, --gradient-shine;
+
+  /* Site geometry and label type, in place of the reference's 1.25rem 2.5rem / 1.125rem. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-sm);
-  min-height: 48px;
-  padding: 0.85rem clamp(1.25rem, 2vw, 2rem);
+  max-width: 100%;
+  height: 48px;
+  padding: 0 1.5rem;
   font-family: var(--font-mono);
   font-size: var(--label-technical);
+  line-height: 1.2;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-weight: 500;
-  text-align: center;
-  transition: background 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease);
+  white-space: nowrap;
 }
 
-.btn-primary {
-  background: var(--primary-container);
-  color: var(--surface-container-lowest);
-  border: 1px solid var(--primary-container);
+.shiny-button::before,
+.shiny-button::after,
+.shiny-button > span::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  translate: -50% -50%;
+  z-index: -1;
+}
+
+.shiny-button:active { translate: 0 1px; }
+
+/* Speckle */
+.shiny-button::before {
+  --size: calc(100% - var(--shadow-size) * 3);
+  --position: 2px;
+  --space: calc(var(--position) * 2);
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(
+    circle at var(--position) var(--position),
+    white calc(var(--position) / 4),
+    transparent 0
+  ) padding-box;
+  background-size: var(--space) var(--space);
+  background-repeat: space;
+  mask-image: conic-gradient(from calc(var(--gradient-angle) + 45deg), black, transparent 10% 90%, black);
+  border-radius: inherit;
+  opacity: var(--gleam-speckle-opacity);
+  z-index: -1;
+}
+
+/* Sheen */
+.shiny-button::after {
+  --animation: shiny-shimmer linear infinite;
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(-50deg, transparent, var(--gleam-accent), transparent);
+  mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+  opacity: var(--gleam-sheen-opacity);
+}
+
+/* Label row. The reference's `span { z-index: 1 }` is inert on an inline span;
+   it is left off here because this span is a flex item, where it would apply. */
+.shiny-button > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+/* Breathing glow; its font-size keeps the reference's 1ex offset. */
+.shiny-button > span::before {
+  --size: calc(100% + 1rem);
+  width: var(--size);
+  height: var(--size);
+  font-size: 1.125rem;
+  box-shadow: inset 0 -1ex 2rem 4px var(--gleam-accent);
+  opacity: 0;
+  transition: opacity var(--transition);
+  animation: calc(var(--duration) * 1.5) shiny-breathe linear infinite;
+}
+
+.shiny-button,
+.shiny-button::before,
+.shiny-button::after {
+  animation:
+    var(--animation) var(--duration),
+    var(--animation) calc(var(--duration) / 0.4) reverse paused;
+  animation-composition: add;
+}
+
+.shiny-button:is(:hover, :focus-visible) {
+  --gradient-percent: 20%;
+  --gradient-angle-offset: 95deg;
+  --gradient-shine: var(--gleam-accent-soft);
+}
+
+.shiny-button:is(:hover, :focus-visible),
+.shiny-button:is(:hover, :focus-visible)::before,
+.shiny-button:is(:hover, :focus-visible)::after { animation-play-state: running; }
+
+.shiny-button:is(:hover, :focus-visible) > span::before { opacity: 1; }
+
+@keyframes shiny-gradient-angle {
+  to { --gradient-angle: 360deg; }
+}
+@keyframes shiny-shimmer {
+  to { rotate: 360deg; }
+}
+@keyframes shiny-breathe {
+  from, to { scale: 1; }
+  50% { scale: 1.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shiny-button,
+  .shiny-button::before,
+  .shiny-button::after,
+  .shiny-button > span::before { animation: none !important; }
+
+  .shiny-button:is(:hover, :focus-visible),
+  .shiny-button:is(:hover, :focus-visible)::before,
+  .shiny-button:is(:hover, :focus-visible)::after { animation-play-state: paused !important; }
+
+  .shiny-button:is(:hover, :focus-visible) > span::before { opacity: 0; }
+
+  .shiny-button { transition: none; }
+}
+
+/*
+ * ShimmerButton — the reference's Tailwind utilities translated to plain CSS.
+ * A blurred conic "spark" slides and spins behind a backdrop inset by --cut,
+ * so only a thin shimmer shows around the edge. --bg, --shimmer-color, --radius,
+ * --speed, --cut and --spread are set inline by the component's props.
+ */
+@keyframes shimmer-slide {
+  to { transform: translate(calc(100cqw - 100%), 0); }
+}
+@keyframes spin-around {
+  0% { transform: translateZ(0) rotate(0); }
+  15%, 35% { transform: translateZ(0) rotate(90deg); }
+  65%, 85% { transform: translateZ(0) rotate(270deg); }
+  100% { transform: translateZ(0) rotate(360deg); }
+}
+
+/* group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap
+   border border-white/10 [background:var(--bg)] [border-radius:var(--radius)]
+   transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px */
+.shimmer-button {
+  position: relative;
+  z-index: 0;
+  display: inline-flex; /* reference: flex; inline keeps the site's CTA flow */
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: var(--bg);
+  border-radius: var(--radius);
+  transform: translateZ(0);
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+
+  /* Site geometry and label type, in place of the reference's px-6 py-3 / text-white. */
+  max-width: 100%;
+  height: 48px;
+  padding: 0 1.5rem;
+  gap: 0.5rem;
+  color: var(--on-surface);
+  font-family: var(--font-mono);
+  font-size: var(--label-technical);
+  line-height: 1.2;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.shimmer-button:active { transform: translateZ(0) translateY(1px); }
+
+/* spark container: -z-30 blur-[2px] absolute inset-0 overflow-visible [container-type:size] */
+.shimmer-button-spark-container {
+  position: absolute;
+  inset: 0;
+  z-index: -30;
+  overflow: visible;
+  filter: blur(2px);
+  container-type: size;
+}
+
+/* spark: absolute inset-0 h-[100cqh] animate-shimmer-slide [aspect-ratio:1] [border-radius:0] [mask:none] */
+.shimmer-button-spark {
+  position: absolute;
+  inset: 0;
+  height: 100cqh;
+  aspect-ratio: 1;
+  border-radius: 0;
+  mask: none;
+  animation: shimmer-slide var(--speed) ease-in-out infinite alternate;
+}
+
+/* spark before: animate-spin-around absolute -inset-full w-auto rotate-0 [background:conic-gradient(...)] [translate:0_0] */
+.shimmer-button-spark-before {
+  position: absolute;
+  inset: -100%;
+  width: auto;
+  transform: rotate(0);
+  translate: 0 0;
+  background: conic-gradient(
+    from calc(270deg - (var(--spread) * 0.5)),
+    transparent 0,
+    var(--shimmer-color) var(--spread),
+    transparent var(--spread)
+  );
+  animation: spin-around calc(var(--speed) * 2) infinite linear;
+}
+
+/* Highlight: absolute size-full rounded-2xl px-4 py-1.5 shadow-[inset_0_-8px_10px_#ffffff1f] transform-gpu transition-all duration-300 ease-in-out */
+.shimmer-button-highlight {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+  padding: 0.375rem 1rem;
+  box-shadow: inset 0 -8px 10px #ffffff1f;
+  transform: translateZ(0);
+  transition: all 300ms ease-in-out;
+}
+.shimmer-button:hover .shimmer-button-highlight { box-shadow: inset 0 -6px 10px #ffffff3f; }
+.shimmer-button:active .shimmer-button-highlight { box-shadow: inset 0 -10px 10px #ffffff3f; }
+
+/* backdrop: absolute -z-20 [background:var(--bg)] [border-radius:var(--radius)] [inset:var(--cut)] */
+.shimmer-button-backdrop {
+  position: absolute;
+  z-index: -20;
+  inset: var(--cut);
+  background: var(--bg);
+  border-radius: var(--radius);
+}
+
+/* Site variants: label colour only (fills come from the `background` prop). */
+.shimmer-button.btn-primary,
+.shimmer-button.btn-dark,
+.shimmer-button.btn-light { color: var(--surface-container-lowest); font-weight: 600; }
+
+.shimmer-button:disabled,
+.shimmer-button[aria-disabled='true'] { opacity: 0.5; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-button-spark,
+  .shimmer-button-spark-before { animation: none; }
+  .shimmer-button { transition: none; }
+}
+
+/* ---- Site CTAs (.btn): shared sizing for ShimmerButton and the header's ShinyButton ---- */
+
+.btn-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.btn-icon { flex: 0 0 auto; }
+
+.btn-block { width: 100%; }
+
+/* Compact functional pill */
+.btn-sm { height: 40px; padding: 0 1.25rem; }
+
+/* Variants retune colour only; the effect, shape and motion are shared. */
+.btn-primary { font-weight: 600; }
+.btn-dark {
+  --gleam-base: var(--surface-container-high);
+  --gleam-inset: var(--surface-container-highest);
+  --gleam-accent: var(--secondary);
+  --gleam-accent-soft: var(--secondary-fixed);
+}
+.btn-light {
+  --gleam-base: var(--secondary-fixed);
+  --gleam-inset: var(--secondary);
+  --gleam-label: var(--surface-container-lowest);
   font-weight: 600;
 }
-.btn-primary:hover { background: var(--secondary-fixed); border-color: var(--secondary-fixed); color: var(--surface-container-lowest); }
 
-.btn-ghost {
-  background: transparent;
-  border: 1px solid var(--hairline-strong);
-  color: var(--on-surface);
-}
-.btn-ghost:hover { border-color: var(--primary-container); color: var(--primary); }
-
-.btn-glass {
-  background: rgba(13, 14, 17, 0.6);
-  backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid var(--hairline);
-  color: var(--on-surface);
-}
-.btn-glass:hover { background: var(--surface-container); }
-
+.shiny-button:disabled,
+.shiny-button[aria-disabled='true'] { opacity: 0.5; pointer-events: none; }
 
 /* Text action — mono caps with a disciplined arrow */
 .tlink {

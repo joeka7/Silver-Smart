@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom'
-import { Masthead, TextLink } from '../components/UI'
+import { Masthead, TextLink, Button } from '../components/UI'
 import type { StyleWithVars } from '../types/css'
 
 export default function NotFound() {
@@ -26,9 +25,7 @@ export default function NotFound() {
               <TextLink to="/" rule>Return home</TextLink>
               <TextLink to="/projects" rule>Selected work</TextLink>
               <TextLink to="/services" rule>All services</TextLink>
-              <Link to="/start-a-project" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
-                <span>Start a project</span>
-              </Link>
+              <Button to="/start-a-project">Start a project</Button>
             </div>
           </div>
         </div>

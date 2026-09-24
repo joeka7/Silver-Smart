@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import ClosingCta from '../components/ClosingCta'
-import { Masthead, SectionIndex } from '../components/UI'
+import { Masthead, SectionIndex, Button } from '../components/UI'
 import { SERVICE_LINKS } from '../data/site'
 import type { StyleWithVars } from '../types/css'
 
@@ -42,12 +42,8 @@ export default function Blog() {
                 published, the pages below carry the same thinking.
               </p>
               <div className="hero-ctas">
-                <Link to="/projects" className="btn btn-primary">
-                  <span>Explore our work</span>
-                </Link>
-                <Link to="/start-a-project" className="btn btn-ghost">
-                  <span>Start a project</span>
-                </Link>
+                <Button to="/projects">Explore our work</Button>
+                <Button to="/start-a-project" variant="dark">Start a project</Button>
               </div>
             </div>
 
