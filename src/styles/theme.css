@@ -454,7 +454,9 @@ p + p { margin-top: 1.05em; }
   background: var(--bg);
   border-radius: var(--radius);
   transform: translateZ(0);
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 300ms ease-in-out;
   text-decoration: none;
 
   /* Site geometry and label type, in place of the reference's px-6 py-3 / text-white. */
@@ -531,6 +533,14 @@ p + p { margin-top: 1.05em; }
   inset: var(--cut);
   background: var(--bg);
   border-radius: var(--radius);
+  transition: background-color 300ms ease-in-out;
+}
+
+/* Hover: each variant's own fill, subdued by 10% black. Hover-capable pointers
+   only, so the darker fill doesn't stick after a tap on touch screens. */
+@media (hover: hover) {
+  .shimmer-button:hover,
+  .shimmer-button:hover .shimmer-button-backdrop { background-color: color-mix(in srgb, var(--bg) 90%, black); }
 }
 
 /* Site variants: label colour only (fills come from the `background` prop). */
@@ -544,7 +554,8 @@ p + p { margin-top: 1.05em; }
 @media (prefers-reduced-motion: reduce) {
   .shimmer-button-spark,
   .shimmer-button-spark-before { animation: none; }
-  .shimmer-button { transition: none; }
+  .shimmer-button,
+  .shimmer-button-backdrop { transition: none; }
 }
 
 /* ---- Site CTAs (.btn): shared sizing for ShimmerButton and the header's ShinyButton ---- */

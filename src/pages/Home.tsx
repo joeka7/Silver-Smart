@@ -230,7 +230,7 @@ export default function Home() {
                 in unison — from interior design masterworks to architectural detail.
               </p>
             </div>
-            <div className="col-4" data-r style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-start' }}>
+            <div className="col-4" data-r style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
               <TextLink to="/projects">Explore all sectors</TextLink>
             </div>
           </div>
