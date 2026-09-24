@@ -28,7 +28,6 @@ export default function NotFound() {
               <TextLink to="/services" rule>All services</TextLink>
               <Link to="/start-a-project" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
                 <span>Start a project</span>
-                <span className="arrow" aria-hidden="true">&#8594;</span>
               </Link>
             </div>
           </div>

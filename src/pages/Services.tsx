@@ -150,7 +150,6 @@ export default function Services() {
           <div className="mt-xl" data-r>
             <Link to="/projects" className="btn btn-ghost">
               <span>See the work</span>
-              <span className="arrow" aria-hidden="true">&#8594;</span>
             </Link>
           </div>
         </div>

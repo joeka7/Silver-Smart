@@ -53,7 +53,6 @@ export default function Header() {
             <Link to={NAV_CTA.to} className="hdr-cta">
               <span className="dot" aria-hidden="true"></span>
               <span>{NAV_CTA.label}</span>
-              <span className="arrow" aria-hidden="true">&#8594;</span>
             </Link>
             <button
               className="burger"
@@ -84,7 +83,6 @@ export default function Header() {
           <li className="mnav-cta">
             <Link to={NAV_CTA.to} className="btn btn-primary" tabIndex={open ? 0 : -1}>
               <span>{NAV_CTA.label}</span>
-              <span className="arrow" aria-hidden="true">&#8594;</span>
             </Link>
           </li>
         </ul>

@@ -266,8 +266,6 @@ p + p { margin-top: 1.05em; }
 }
 .btn-glass:hover { background: var(--surface-container); }
 
-.btn .arrow { transition: transform 0.15s var(--ease); }
-.btn:hover .arrow { transform: translateX(3px); }
 
 /* Text action — mono caps with a disciplined arrow */
 .tlink {

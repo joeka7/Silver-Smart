@@ -240,7 +240,6 @@ export default function StartAProject() {
                   <div className="form-submit">
                     <button type="submit" className="btn btn-primary">
                       <span>Send request</span>
-                      <span className="arrow" aria-hidden="true">&#8594;</span>
                     </button>
                     <p className="t-label c-muted" id="ssnote" role="status">
                       {status || <>Or email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></>}

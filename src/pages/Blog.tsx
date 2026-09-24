@@ -44,7 +44,6 @@ export default function Blog() {
               <div className="hero-ctas">
                 <Link to="/projects" className="btn btn-primary">
                   <span>Explore our work</span>
-                  <span className="arrow" aria-hidden="true">&#8594;</span>
                 </Link>
                 <Link to="/start-a-project" className="btn btn-ghost">
                   <span>Start a project</span>

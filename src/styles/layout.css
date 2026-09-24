@@ -103,8 +103,6 @@
 .hdr-cta:hover { border-color: var(--primary-container); }
 .hdr-cta .dot { width: 0.375rem; height: 0.375rem; transition: transform 0.15s var(--ease); }
 .hdr-cta:hover .dot { transform: scale(1.3); }
-.hdr-cta .arrow { transition: transform 0.15s var(--ease); }
-.hdr-cta:hover .arrow { transform: translateX(2px); }
 
 @media (min-width: 1100px) {
   .hdr-nav { display: flex; }

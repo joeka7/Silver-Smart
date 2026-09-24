@@ -43,7 +43,6 @@ export default function ClosingCta({ heading, blurb, eyebrow = 'Commence a dialo
             <div className="closing-b" data-r>
               <Link to="/start-a-project" className="btn btn-primary">
                 <span>Start a project</span>
-                <span className="arrow" aria-hidden="true">&#8594;</span>
               </Link>
               <a href={CONTACT.phone.href} className="btn btn-ghost">
                 <span>{CONTACT.phone.label}</span>

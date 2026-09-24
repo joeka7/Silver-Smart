@@ -7,7 +7,6 @@ import introImg from '../imgs/Introduction.webp'
 import closingVid from '../videos/hero-vid.mp4'
 import hero3 from '../imgs/image3.webp'
 import hero4 from '../imgs/image4.webp'
-import hero5 from '../imgs/image5.webp'
 
 /** Scope tags per discipline, drawn from each service's published scope. */
 const SERVICE_TAGS: Record<string, string[]> = {
@@ -77,7 +76,6 @@ export default function Home() {
               <div className="hero-ctas" data-r style={{ '--dl': '.14s' } as StyleWithVars}>
                 <Link to="/projects" className="btn btn-primary">
                   <span>Explore our work</span>
-                  <span className="arrow" aria-hidden="true">&#8594;</span>
                 </Link>
                 <Link to="/about" className="btn btn-glass">
                   <span>Our studio</span>
@@ -320,7 +318,6 @@ export default function Home() {
 
                 <Link to="/start-a-project" className="btn btn-primary" style={{ width: '100%' }}>
                   <span>Start a project</span>
-                  <span className="arrow" aria-hidden="true">&#8594;</span>
                 </Link>
               </div>
             </div>
@@ -370,7 +367,6 @@ export default function Home() {
                 <div className="hero-ctas" data-r>
                   <Link to="/start-a-project" className="btn btn-primary">
                     <span>Start a project</span>
-                    <span className="arrow" aria-hidden="true">&#8594;</span>
                   </Link>
                   <Link to="/services" className="btn btn-ghost">
                     <span>All services</span>
@@ -379,9 +375,6 @@ export default function Home() {
               </div>
 
               <div className="closing-b" data-r>
-                <div className="frame" style={{ width: '100%', aspectRatio: '4 / 3', maxWidth: 360 }}>
-                  <img src={hero5} alt="Silver Smart delivered interior" loading="lazy" decoding="async" />
-                </div>
                 <div className="t-label c-muted" style={{ textAlign: 'left', lineHeight: 1.8 }}>
                   <span style={{ display: 'block', color: 'var(--on-surface)' }}>{CONTACT.office}</span>
                   <a href={CONTACT.mobile.href}>{CONTACT.mobile.label}</a><br />
