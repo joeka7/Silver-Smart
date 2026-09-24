@@ -363,14 +363,6 @@ export default function Home() {
                   <Button to="/services" variant="dark">All services</Button>
                 </div>
               </div>
-
-              <div className="closing-b" data-r>
-                <div className="t-label c-muted" style={{ textAlign: 'left', lineHeight: 1.8 }}>
-                  <span style={{ display: 'block', color: 'var(--on-surface)' }}>{CONTACT.office}</span>
-                  <a href={CONTACT.mobile.href}>{CONTACT.mobile.label}</a><br />
-                  <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
-                </div>
-              </div>
             </div>
           </div>
         </div>

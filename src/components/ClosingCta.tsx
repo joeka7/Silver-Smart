@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react'
-import { CONTACT } from '../data/site'
-import { Button } from './UI'
 import closingVid from '../videos/hero-vid.mp4'
 
 interface ClosingCtaProps {
@@ -39,11 +37,6 @@ export default function ClosingCta({ heading, blurb, eyebrow = 'Commence a dialo
               </div>
               <h2 className="t-lg" data-r>{heading}</h2>
               <p className="t-lede" data-r style={{ maxWidth: '46ch' }}>{blurb}</p>
-            </div>
-            <div className="closing-b" data-r>
-              <Button to="/start-a-project">Start a project</Button>
-              <Button href={CONTACT.phone.href} variant="dark">{CONTACT.phone.label}</Button>
-              <span className="t-label c-muted">{CONTACT.office}</span>
             </div>
           </div>
         </div>
