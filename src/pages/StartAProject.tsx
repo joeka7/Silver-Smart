@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { SectionIndex, Masthead, Button } from '../components/UI'
+import { SectionIndex, Masthead, Button, TextLink } from '../components/UI'
 import { CONTACT, SOCIALS, SECTORS } from '../data/site'
 import type { StyleWithVars } from '../types/css'
 import hero2 from '../imgs/image2.webp'
@@ -272,11 +272,7 @@ export default function StartAProject() {
                 Whether the brief is a single room, a full fit-out or a maintenance contract, it is handled by the same
                 team to the same standard.
               </p>
-              <a className="tlink" href={CONTACT.phone.href}>
-                <span className="tlink-rule" aria-hidden="true"></span>
-                <span>Call {CONTACT.phone.label}</span>
-                <span className="arrow" aria-hidden="true">&#8594;</span>
-              </a>
+              <TextLink href={CONTACT.phone.href} rule>Call {CONTACT.phone.label}</TextLink>
             </div>
           </div>
         </div>

@@ -1,6 +1,8 @@
 // Silver Smart — content extracted verbatim from the Claude Design source files.
 // Company facts (address, phone, socials) match the design bundle and silversmartuae.com.
 
+import { SERVICES, SERVICE_SLUGS } from './services'
+
 /** A telephone/mail entry: the text shown, and the href it dials. */
 export interface ContactLink {
   label: string
@@ -100,12 +102,11 @@ export const NAV: NavLinkItem[] = [
 /** Header action — rendered as a bordered button rather than a plain nav link. */
 export const NAV_CTA: NavLinkItem = { label: 'Start a project', to: '/start-a-project' }
 
-export const SERVICE_LINKS: NavLinkItem[] = [
-  { label: 'Property', to: '/services/property' },
-  { label: 'Interior Design', to: '/services/interior-design' },
-  { label: 'Fit-Out', to: '/services/fit-out' },
-  { label: 'Maintenance', to: '/services/maintenance' },
-]
+/** Derived from SERVICES, so a service's nav label and route are defined once. */
+export const SERVICE_LINKS: NavLinkItem[] = SERVICE_SLUGS.map((slug) => ({
+  label: SERVICES[slug].navLabel,
+  to: `/services/${slug}`,
+}))
 
 // Home — services index (section 02)
 export const HOME_SERVICES: HomeService[] = [

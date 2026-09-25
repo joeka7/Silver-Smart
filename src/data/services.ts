@@ -2,6 +2,10 @@
 // Content is transcribed verbatim from service-*.html.
 
 import type { NumberedItem } from './site'
+import imgProperty from '../imgs/image.webp'
+import imgInteriorDesign from '../imgs/image2.webp'
+import imgFitOut from '../imgs/image3.webp'
+import imgMaintenance from '../imgs/image4.webp'
 
 /** The link to the following service page in the fixed 01 → 04 → 01 rotation. */
 export interface ServiceNextLink {
@@ -104,6 +108,14 @@ export const SERVICES: Record<ServiceSlug, Service> = {
 }
 
 export const SERVICE_SLUGS = Object.keys(SERVICES) as ServiceSlug[]
+
+/** One photograph per discipline, shared by the Services index and each service page's band. */
+export const SERVICE_IMAGE: Record<ServiceSlug, string> = {
+  property: imgProperty,
+  'interior-design': imgInteriorDesign,
+  'fit-out': imgFitOut,
+  maintenance: imgMaintenance,
+}
 
 /** Narrows an arbitrary route param to a known service slug. */
 export function isServiceSlug(slug: string | undefined): slug is ServiceSlug {

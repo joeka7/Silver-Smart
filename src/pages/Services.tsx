@@ -1,24 +1,12 @@
-import { Link } from 'react-router-dom'
 import ClosingCta from '../components/ClosingCta'
-import { SectionIndex, Masthead, FieldGrid, Button } from '../components/UI'
+import { SectionIndex, Masthead, FieldGrid, Button, TextLink } from '../components/UI'
 import { SPECIALISATION } from '../data/site'
-import { SERVICES, SERVICE_SLUGS } from '../data/services'
+import { SERVICES, SERVICE_SLUGS, SERVICE_IMAGE } from '../data/services'
+import type { ServiceSlug } from '../data/services'
 import type { StyleWithVars } from '../types/css'
-import hero1 from '../imgs/image.webp'
-import hero2 from '../imgs/image2.webp'
-import hero3 from '../imgs/image3.webp'
-import hero4 from '../imgs/image4.webp'
-
-/** One photograph per discipline, drawn from the existing Silver Smart set. */
-const DISCIPLINE_IMAGE: Record<string, string> = {
-  property: hero1,
-  'interior-design': hero2,
-  'fit-out': hero3,
-  maintenance: hero4,
-}
 
 /** Short technical register shown under each discipline's scope list. */
-const DISCIPLINE_TAG: Record<string, string> = {
+const DISCIPLINE_TAG: Record<ServiceSlug, string> = {
   property: 'Acquisition · Handover · Asset care',
   'interior-design': 'Plan · Light · Circulation · Material',
   'fit-out': 'Colours · Materials · Decoration',
@@ -84,15 +72,12 @@ export default function Services() {
 
                   <div className="disc-foot">
                     <span>Sectors: Six</span>
-                    <Link to={`/services/${svc.slug}`} className="tlink">
-                      <span>View service</span>
-                      <span className="arrow" aria-hidden="true">&#8594;</span>
-                    </Link>
+                    <TextLink to={`/services/${svc.slug}`}>View service</TextLink>
                   </div>
                 </div>
 
                 <div className="disc-media frame-zoom">
-                  <img src={DISCIPLINE_IMAGE[slug]} alt={svc.bandSlot} loading="lazy" decoding="async" />
+                  <img src={SERVICE_IMAGE[slug]} alt={svc.bandSlot} loading="lazy" decoding="async" />
                   <div className="glass frame-cap frame-cap-dock">
                     <div>
                       <span className="t-label c-muted" style={{ display: 'block', fontSize: '0.625rem' }}>

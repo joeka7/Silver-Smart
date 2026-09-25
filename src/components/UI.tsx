@@ -3,6 +3,7 @@ import type { LinkProps } from 'react-router-dom'
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import type { StyleWithVars } from '../types/css'
+import type { NumberedItem } from '../data/site'
 import { ShinyButton } from './ui/shiny-button'
 import type { ShinyButtonProps } from './ui/shiny-button'
 import { ShimmerButton } from './ui/shimmer-button'
@@ -225,14 +226,8 @@ export function PullQuote({ children, name, role }: QuoteProps) {
   )
 }
 
-export interface NumberedEntry {
-  n: string
-  title: string
-  desc: string
-}
-
 /** Editorial numbered rows separated by hairlines. */
-export function EditorialRows({ items }: { items: NumberedEntry[] }) {
+export function EditorialRows({ items }: { items: NumberedItem[] }) {
   return (
     <ul className="ed" data-stagger=".06">
       {items.map((item) => (
@@ -249,7 +244,7 @@ export function EditorialRows({ items }: { items: NumberedEntry[] }) {
 }
 
 interface FieldGridProps {
-  items: NumberedEntry[]
+  items: NumberedItem[]
   style?: CSSProperties
 }
 

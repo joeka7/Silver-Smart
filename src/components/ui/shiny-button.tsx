@@ -114,5 +114,3 @@ export function ShinyButton({
   const { type = 'button', ...buttonRest } = rest as Omit<ShinyAsButton, keyof ShinyOwnProps>
   return <button type={type} {...buttonRest} {...shared}>{inner}</button>
 }
-
-export default ShinyButton

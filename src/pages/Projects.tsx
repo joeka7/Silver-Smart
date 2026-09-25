@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ClosingCta from '../components/ClosingCta'
-import { SectionIndex, Masthead, PullQuote } from '../components/UI'
+import { SectionIndex, Masthead, PullQuote, TextLink } from '../components/UI'
 import { SECTORS, TESTIMONIALS } from '../data/site'
 import type { StyleWithVars } from '../types/css'
 import hero1 from '../imgs/image.webp'
@@ -172,11 +172,7 @@ export default function Projects() {
                 Every project is a test of the same three things: how it was planned, how it was built, and how it is
                 kept.
               </p>
-              <Link to="/about" className="tlink">
-                <span className="tlink-rule" aria-hidden="true"></span>
-                <span>How we work</span>
-                <span className="arrow" aria-hidden="true">&#8594;</span>
-              </Link>
+              <TextLink to="/about" rule>How we work</TextLink>
             </div>
           </div>
         </div>

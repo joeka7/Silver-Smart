@@ -44,7 +44,9 @@ The visual system is a React implementation of the Stitch design export. Its tok
 ```
 src/
   components/   Header, SiteFooter, HeroMedia, ClosingCta,
-                UI (SectionIndex, Masthead, Ledger, EditorialRows, FieldGrid, …)
+                UI (Button, SectionIndex, Masthead, Ledger, EditorialRows, FieldGrid, …)
+    ui/         ShimmerButton (site CTAs), ShinyButton (header CTA)
+  lib/          utils — cn() class-name joiner
   pages/        Home, About, Services, ServiceDetail, Projects, ProjectDetail,
                 Blog, StartAProject, NotFound
   hooks/        useSiteBehaviour — scroll reveals, nav state, drift, progress
@@ -95,9 +97,9 @@ If a form backend is added later, replace the `window.location.href` assignment 
 ## Images
 
 Photography lives in `src/imgs/` and is imported directly, so Vite fingerprints and
-optimises it. `HeroMedia` composites the branded hero video (`src/videos/hero-vid.mp4`)
-with a five-frame still sequence that crossfades over it; both are suppressed under
-`prefers-reduced-motion`.
+optimises it. `HeroMedia` renders the Home hero as a single still (`hero-sec.webp`),
+fetched eagerly at high priority. `ClosingCta` plays the branded video
+(`src/videos/hero-vid.mp4`) behind the closing panel on every page.
 
 Aspect ratios are owned by the containing `.frame` / `.card-media` / `.sector-media`
 element in CSS, so swapping an image never changes the layout.
@@ -105,7 +107,7 @@ element in CSS, so swapping an image never changes the layout.
 ## Accessibility & responsiveness
 
 - Verified free of horizontal overflow at 1920 / 1440 / 1024 / 768 / 390 / 360px.
-- `prefers-reduced-motion` disables reveals, the hero sequence and the pulse animation.
+- `prefers-reduced-motion` disables reveals, button shimmer/sheen and the pulse animation.
 - Touch targets are raised to 44px under `pointer: coarse`.
 - The mobile drawer traps scroll, closes on Escape and on navigation.
 

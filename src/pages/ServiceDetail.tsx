@@ -1,20 +1,9 @@
 import { useParams, Navigate, Link } from 'react-router-dom'
 import ClosingCta from '../components/ClosingCta'
 import { SectionIndex, Masthead, EditorialRows, TextLink } from '../components/UI'
-import { SERVICES, isServiceSlug } from '../data/services'
+import { SERVICES, SERVICE_IMAGE, isServiceSlug } from '../data/services'
 import type { StyleWithVars } from '../types/css'
-import hero1 from '../imgs/image.webp'
-import hero2 from '../imgs/image2.webp'
-import hero3 from '../imgs/image3.webp'
-import hero4 from '../imgs/image4.webp'
 import hero5 from '../imgs/image5.webp'
-
-const BAND_IMAGE: Record<string, string> = {
-  property: hero1,
-  'interior-design': hero2,
-  'fit-out': hero3,
-  maintenance: hero4,
-}
 
 /** One template for all four service pages — they share structure in the design. */
 export default function ServiceDetail() {
@@ -42,7 +31,7 @@ export default function ServiceDetail() {
       {/* ===== BAND ===== */}
       <section className="wrap" style={{ paddingBottom: 'var(--space-2xl)' }}>
         <div className="frame frame-zoom" data-r style={{ width: '100%', aspectRatio: '21 / 9', minHeight: 240 }}>
-          <img src={BAND_IMAGE[slug]} alt={svc.bandSlot} loading="lazy" decoding="async" />
+          <img src={SERVICE_IMAGE[slug]} alt={svc.bandSlot} loading="lazy" decoding="async" />
           <div className="glass frame-cap frame-cap-dock">
             <div>
               <span className="t-label c-muted" style={{ display: 'block', fontSize: '0.625rem' }}>Discipline</span>

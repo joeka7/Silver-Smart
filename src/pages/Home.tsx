@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 import HeroMedia from '../components/HeroMedia'
+import ClosingCta from '../components/ClosingCta'
 import { SectionIndex, TextLink, Button } from '../components/UI'
 import { HOME_SERVICES, HOME_WORK, WHY, CONTACT } from '../data/site'
 import type { StyleWithVars } from '../types/css'
 import introImg from '../imgs/Introduction.webp'
-import closingVid from '../videos/hero-vid.mp4'
 import hero3 from '../imgs/image3.webp'
 import hero4 from '../imgs/image4.webp'
 
@@ -331,42 +331,18 @@ export default function Home() {
       </section>
 
       {/* ===== 04 — CLOSING ===== */}
-      <section className="section surface-lowest">
-        <div className="wrap">
-          <div className="closing" style={{ padding: 'clamp(1.5rem, 4vw, 4rem)' }}>
-            <video
-              className="closing-video"
-              src={closingVid}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-hidden="true"
-              tabIndex={-1}
-            />
-            <div className="closing-scrim" aria-hidden="true"></div>
-            <div className="closing-grid">
-              <div className="closing-a">
-                <div className="sindex t-label" data-r style={{ marginBottom: 0 }}>
-                  <span className="dot" aria-hidden="true"></span>
-                  <span className="sindex-n">04 // Start</span>
-                </div>
-                <h2 className="t-lg" data-r>
-                  Have a space<br /><span className="c-primary">in mind?</span>
-                </h2>
-                <p className="t-lede" data-r style={{ maxWidth: '46ch' }}>
-                  Let&apos;s build something exceptional. Tell us about the property, the brief and the timeline.
-                </p>
-                <div className="hero-ctas" data-r>
-                  <Button to="/start-a-project">Start a project</Button>
-                  <Button to="/services" variant="dark">All services</Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ClosingCta
+        className="surface-lowest"
+        eyebrow="04 // Start"
+        heading={<>Have a space<br /><span className="c-primary">in mind?</span></>}
+        blurb="Let's build something exceptional. Tell us about the property, the brief and the timeline."
+        actions={
+          <>
+            <Button to="/start-a-project">Start a project</Button>
+            <Button to="/services" variant="dark">All services</Button>
+          </>
+        }
+      />
     </>
   )
 }

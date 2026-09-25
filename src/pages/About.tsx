@@ -1,19 +1,20 @@
 import ClosingCta from '../components/ClosingCta'
 import { SectionIndex, Masthead, Ledger, EditorialRows, FieldGrid, PullQuote, TextLink } from '../components/UI'
-import type { LedgerStat, NumberedEntry } from '../components/UI'
+import type { LedgerStat } from '../components/UI'
 import { TESTIMONIALS } from '../data/site'
+import type { NumberedItem } from '../data/site'
 import type { StyleWithVars } from '../types/css'
 import hero1 from '../imgs/image.webp'
 import hero3 from '../imgs/image3.webp'
 import hero5 from '../imgs/image5.webp'
 
-const PRINCIPLES: NumberedEntry[] = [
+const PRINCIPLES: NumberedItem[] = [
   { n: '01', title: 'Mission', desc: 'To provide premium property, interior design and maintenance services tailored to the unique needs and preferences of our clients — exceeding expectations through exceptional quality and attention to detail, with a commitment to sustainability and innovation.' },
   { n: '02', title: 'Vision', desc: "To become the most trusted and respected property, interior design and maintenance company in the UAE. We set out to raise the standard for excellence and innovation, improving and expanding our services as our clients' needs evolve." },
   { n: '03', title: 'Goal', desc: 'A strong brand presence built on consistently exceptional delivery; long-term client relationships founded on understanding unique needs; a commitment to sustainability through eco-friendly materials and practices; an inclusive environment that attracts and retains talent; growth within the UAE and internationally without compromising quality; and continuous innovation informed by new technologies.' },
 ]
 
-const HOW_WE_WORK: NumberedEntry[] = [
+const HOW_WE_WORK: NumberedItem[] = [
   { n: '01', title: 'Professional specialists', desc: 'Experienced professionals across property, design, fit-out and maintenance — accountable from first brief to final handover.' },
   { n: '02', title: 'Precise builders', desc: 'We care about the details of implementation, because the quality of a space is decided in its joints, edges and finishes.' },
   { n: '03', title: 'Brilliant ideas', desc: 'Creativity applied with discipline: bespoke solutions that reflect individual styles and preferences, never a house template.' },
