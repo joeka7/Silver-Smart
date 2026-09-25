@@ -75,7 +75,7 @@ export const CONTACT: Contact = {
   office: 'Abu Dhabi, UAE',
   address: ['Al Musaffah City — Qanuat St', 'Office 27.28, Exalto Emirates Building', 'Abu Dhabi, United Arab Emirates'],
   phone: { label: '02 877 8938', href: 'tel:+97128778938' },
-  whatsapp: { label: 'WhatsApp 050 122 6537', href: 'tel:+971501226537' },
+  whatsapp: { label: 'WhatsApp 050 122 6537', href: 'https://wa.me/971501226537' },
   mobile: { label: '050 122 6537', href: 'tel:+971501226537' },
   email: 'info@silversmartuae.com',
 }
@@ -85,6 +85,7 @@ export const SOCIALS: SocialLink[] = [
   { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61554267073735' },
   { label: 'X', href: 'https://twitter.com/sliversmartuae' },
   { label: 'TikTok', href: 'https://www.tiktok.com/@sliver.smart' },
+  { label: 'Snapchat', href: 'https://www.snapchat.com/add/silversmartuae' },
 ]
 
 export const NAV: NavLinkItem[] = [

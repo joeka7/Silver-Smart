@@ -121,7 +121,7 @@ export default function StartAProject() {
                   <a className="t-sm" style={{ fontSize: '1.05rem' }} href={CONTACT.phone.href}>
                     {CONTACT.phone.label}
                   </a>
-                  <a className="t-label c-dim" href={CONTACT.whatsapp.href}>{CONTACT.whatsapp.label}</a>
+                  <a className="t-label c-dim" href={CONTACT.whatsapp.href} target="_blank" rel="noopener noreferrer">{CONTACT.whatsapp.label}</a>
                 </div>
                 <div className="panel-row">
                   <span className="t-label c-muted" style={{ fontSize: '0.625rem' }}>Electronic enquiries</span>
