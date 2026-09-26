@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import logo from '../imgs/logo.webp'
 import { NAV, SERVICE_LINKS, SOCIALS, CONTACT } from '../data/site'
+import { SocialIcon } from './SocialIcon'
 import { Button } from './UI'
 
 /**
@@ -86,7 +87,9 @@ export default function SiteFooter() {
           <p>Silver Smart — Property, Interior Design, Fit-Out &amp; General Maintenance · Abu Dhabi, UAE.</p>
           <div className="ftr-social">
             {SOCIALS.map((s) => (
-              <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a>
+              <a key={s.href} className="social-link" href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}>
+                <SocialIcon name={s.label} />
+              </a>
             ))}
             <span className="c-dim">© {new Date().getFullYear()} Silver Smart</span>
           </div>

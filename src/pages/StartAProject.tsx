@@ -4,6 +4,7 @@ import { SectionIndex, Masthead, Button, TextLink } from '../components/UI'
 import PhoneField from '../components/PhoneField'
 import type { PhoneValue } from '../components/PhoneField'
 import { CONTACT, SOCIALS, SECTORS } from '../data/site'
+import { SocialIcon } from '../components/SocialIcon'
 import type { StyleWithVars } from '../types/css'
 import hero2 from '../imgs/image2.webp'
 
@@ -158,8 +159,8 @@ export default function StartAProject() {
                     style={{ justifyContent: 'flex-start', gap: 'var(--space-md)' }}
                   >
                     {SOCIALS.map((s) => (
-                      <a key={s.href} className="t-label" href={s.href} target="_blank" rel="noopener noreferrer">
-                        {s.label}
+                      <a key={s.href} className="social-link" href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}>
+                        <SocialIcon name={s.label} />
                       </a>
                     ))}
                   </div>

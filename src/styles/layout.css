@@ -1191,6 +1191,32 @@ body.mopen {
   color: var(--on-surface);
 }
 
+/* Icon-only social links (footer + Start a Project panel). Colour is inherited
+   from the surrounding text so each placement keeps its existing tone. */
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.social-link:hover,
+.social-link:focus-visible {
+  color: var(--on-surface);
+  transform: translateY(-1px);
+}
+.social-icon {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .social-link:hover,
+  .social-link:focus-visible {
+    transform: none;
+  }
+}
+
 /* ============================================================================
    Forms — architectural ledger style
    ========================================================================== */
