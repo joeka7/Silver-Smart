@@ -1,16 +1,31 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { SectionIndex, Masthead, Button, TextLink } from '../components/UI'
+import PhoneField from '../components/PhoneField'
+import type { PhoneValue } from '../components/PhoneField'
 import { CONTACT, SOCIALS, SECTORS } from '../data/site'
 import type { StyleWithVars } from '../types/css'
 import hero2 from '../imgs/image2.webp'
 
 const SECTOR_OPTIONS: string[] = SECTORS.map((s) => s.title)
 const SERVICE_OPTIONS: string[] = ['Property', 'Interior design', 'Fit-out', 'Maintenance']
+const PHONE_ERROR = 'Please enter a valid number for the selected country, or leave it blank.'
+
+/** Phone is optional: only a non-empty, invalid entry is an error. */
+const phoneError = (phone: PhoneValue | null): string | null =>
+  phone && !phone.isEmpty && !phone.isValid ? PHONE_ERROR : null
 
 export default function StartAProject() {
   const [services, setServices] = useState<string[]>([])
   const [status, setStatus] = useState<string | null>(null)
+  const [phone, setPhone] = useState<PhoneValue | null>(null)
+  const [phoneMsg, setPhoneMsg] = useState<string | null>(null)
+
+  const onPhoneChange = (value: PhoneValue): void => {
+    setPhone(value)
+    // Clear a shown error as soon as the entry becomes acceptable.
+    if (!phoneError(value)) setPhoneMsg(null)
+  }
 
   const toggleService = (value: string): void =>
     setServices((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
@@ -28,6 +43,13 @@ export default function StartAProject() {
 
     if (!name || !email) {
       setStatus('Please add your name and email so we can reply.')
+      return
+    }
+
+    if (phoneError(phone)) {
+      setPhoneMsg(PHONE_ERROR)
+      setStatus('Please check the phone number.')
+      document.getElementById('f-phone')?.focus()
       return
     }
 
@@ -192,7 +214,14 @@ export default function StartAProject() {
                   <div className="form-two">
                     <div className="field">
                       <label htmlFor="f-phone">Phone</label>
-                      <input id="f-phone" name="phone" type="tel" placeholder="+971" />
+                      <PhoneField
+                        id="f-phone"
+                        name="phone"
+                        defaultCountry="AE"
+                        error={phoneMsg}
+                        onChange={onPhoneChange}
+                        onBlur={() => setPhoneMsg(phoneError(phone))}
+                      />
                     </div>
                     <div className="field">
                       <label htmlFor="f-loc">Location</label>
