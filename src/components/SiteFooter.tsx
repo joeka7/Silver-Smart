@@ -80,19 +80,19 @@ export default function SiteFooter() {
               {' · '}
               <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
             </div>
+            <div className="ftr-social">
+              {SOCIALS.map((s) => (
+                <a key={s.href} className="social-link" href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}>
+                  <SocialIcon name={s.label} />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
         <div className="ftr-bot">
           <p>Silver Smart — Property, Interior Design, Fit-Out &amp; General Maintenance · Abu Dhabi, UAE.</p>
-          <div className="ftr-social">
-            {SOCIALS.map((s) => (
-              <a key={s.href} className="social-link" href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}>
-                <SocialIcon name={s.label} />
-              </a>
-            ))}
-            <span className="c-dim">© {new Date().getFullYear()} Silver Smart</span>
-          </div>
+          <span className="c-dim">© {new Date().getFullYear()} Silver Smart</span>
         </div>
       </div>
     </footer>

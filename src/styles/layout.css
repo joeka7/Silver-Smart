@@ -1181,11 +1181,15 @@ body.mopen {
     justify-content: space-between;
   }
 }
+/* Sits at the foot of the Dispatch column. Colour matches the bottom bar the
+   icons used to live in; the top margin separates them from the contact line. */
 .ftr-social {
   display: flex;
   align-items: center;
   gap: var(--space-md);
   flex-wrap: wrap;
+  margin-top: var(--space-sm);
+  color: var(--outline);
 }
 .ftr-social a:hover {
   color: var(--on-surface);
