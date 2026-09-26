@@ -1221,6 +1221,19 @@ body.mopen {
   }
 }
 
+/* Contact and inline text links that sit outside the nav/footer lists. Muted
+   links lift to full-strength text, as the nav does; links already at full
+   strength warm to primary, as .tlink and .pager do. Social icons keep their own. */
+.mnav-foot a:hover,
+.ftr-wide .t-label a:hover,
+.form-submit .t-label a:hover,
+.panel a.c-dim:hover {
+  color: var(--on-surface);
+}
+.panel a:not(.c-dim, .social-link):hover {
+  color: var(--primary);
+}
+
 /* ============================================================================
    Forms — architectural ledger style
    ========================================================================== */

@@ -148,7 +148,7 @@ export default function StartAProject() {
                 </div>
                 <div className="panel-row">
                   <span className="t-label c-muted" style={{ fontSize: '0.625rem' }}>Electronic enquiries</span>
-                  <a className="t-label" href={`mailto:${CONTACT.email}`} style={{ color: 'var(--on-surface)' }}>
+                  <a className="t-label" href={`mailto:${CONTACT.email}`}>
                     {CONTACT.email}
                   </a>
                 </div>
