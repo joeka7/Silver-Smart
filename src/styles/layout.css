@@ -132,20 +132,27 @@
   align-items: center;
   flex: 0 0 auto;
 }
-.burger i {
+/* Animated burger/close icon (components/ui/menu-toggle-icon.tsx).
+   32px box → 20px-wide bars, matching the previous burger. */
+.menu-toggle-icon {
   display: block;
-  width: 20px;
-  height: 1.5px;
-  background: var(--on-surface);
+  width: 32px;
+  height: 32px;
+  color: var(--on-surface);
+  transition: transform var(--menu-toggle-duration, 500ms) cubic-bezier(0.4, 0, 0.2, 1);
+}
+.menu-toggle-icon.is-open {
+  transform: rotate(-45deg);
+}
+.menu-toggle-icon-path {
+  stroke-dasharray: 12 63;
   transition:
-    transform 0.3s var(--ease),
-    opacity 0.3s var(--ease);
+    stroke-dasharray var(--menu-toggle-duration, 500ms) cubic-bezier(0.4, 0, 0.2, 1),
+    stroke-dashoffset var(--menu-toggle-duration, 500ms) cubic-bezier(0.4, 0, 0.2, 1);
 }
-body.mopen .burger i:first-child {
-  transform: translateY(3.25px) rotate(45deg);
-}
-body.mopen .burger i:last-child {
-  transform: translateY(-3.25px) rotate(-45deg);
+.menu-toggle-icon.is-open .menu-toggle-icon-path {
+  stroke-dasharray: 20 300;
+  stroke-dashoffset: -32.42px;
 }
 
 @media (min-width: 1100px) {

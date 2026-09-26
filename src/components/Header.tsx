@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import logo from '../imgs/logo.webp'
 import { NAV, NAV_CTA, CONTACT } from '../data/site'
 import { HeaderButton as Button } from './UI'
+import { MenuToggleIcon } from './ui/menu-toggle-icon'
 
 /**
  * Fixed glassmorphic header, per the Stitch export.
@@ -61,8 +62,7 @@ export default function Header() {
               aria-controls="mnav"
               onClick={() => setOpen((v) => !v)}
             >
-              <i></i>
-              <i></i>
+              <MenuToggleIcon open={open} />
             </button>
           </div>
         </div>
