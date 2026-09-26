@@ -53,7 +53,7 @@ export default function About() {
         <div className="wrap">
           <SectionIndex n="02" title="Philosophy & methodology" note="Where we build your visions" />
 
-          <div className="split">
+          <div className="split split-fill">
             <div className="col-6 stack-lg">
               <h2 className="t-lg" data-r>
                 A shared passion for <span className="c-primary">creating inspiring spaces</span> — and for maintaining
@@ -95,7 +95,7 @@ export default function About() {
             </div>
 
             <div className="col-6" data-r style={{ '--dl': '.1s' } as StyleWithVars}>
-              <div className="frame frame-zoom" style={{ aspectRatio: '16 / 11' }}>
+              <div className="frame frame-zoom frame-fill">
                 <img src={hero1} alt="Silver Smart interior, delivered end to end" loading="lazy" decoding="async" />
                 <div className="glass frame-cap">
                   <div>
