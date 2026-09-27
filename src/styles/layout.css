@@ -1344,6 +1344,16 @@ body.mopen {
   cursor: pointer;
   transition: background 0.15s var(--ease);
 }
+/* .opt is a <label> inside .field, so `.field label` (display: block; padding: 0)
+   outranks it and leaves the checkbox and text off-centre at the top of the box.
+   Restore only the vertical centring and padding; gap stays 0 so the horizontal
+   layout is exactly as it rendered before. */
+.field .opt {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding-block: 0.75rem;
+}
 .opt:hover {
   background: var(--surface-container-high);
 }
