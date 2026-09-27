@@ -1375,6 +1375,19 @@ body.mopen {
   }
 }
 
+/* Turnstile runs invisibly (interaction-only). Until Cloudflare asks the visitor
+   to interact it occupies no space: the negative margin cancels the .form gap. */
+.form-turnstile {
+  height: 0;
+  overflow: hidden;
+  margin-top: calc(-1 * var(--space-lg));
+}
+.form-turnstile.is-interactive {
+  height: auto;
+  overflow: visible;
+  margin-top: 0;
+}
+
 .form-note {
   display: flex;
   align-items: flex-start;

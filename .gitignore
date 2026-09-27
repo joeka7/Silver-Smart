@@ -4,3 +4,9 @@ dist
 *.local
 *.log
 *.tsbuildinfo
+dist-server
+
+# Environment files hold SMTP and Turnstile secrets — only the example is tracked.
+.env
+.env.*
+!.env.example

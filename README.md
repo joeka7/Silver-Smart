@@ -5,15 +5,18 @@ fit-out and general maintenance company based in Abu Dhabi, UAE.
 
 ## Stack
 
-React 18 · Vite 5 · React Router 6 · plain CSS (no framework)
+React 18 · Vite 5 · React Router 6 · plain CSS (no framework) · a small Node server
+(`server/`) for the contact endpoint, deployed on Railway
 
 ## Commands
 
 ```bash
 npm install
-npm run dev      # dev server on :5173
-npm run build    # production build to dist/
-npm run preview  # serve the production build
+npm run dev      # dev server on :5173 (proxies /api to :3001)
+npm run dev:api  # contact API on :3001, reads .env
+npm run build    # site to dist/, server to dist-server/
+npm start        # production server: site + API on $PORT
+npm run preview  # serve the production build without the API
 npm run typecheck
 ```
 
@@ -87,12 +90,26 @@ and card primitives the listing needs are already used on that page.
 
 ## Contact form
 
-`StartAProject` has no backend. The form composes a `mailto:` to the published address
-with every field filled in, rather than silently discarding an enquiry. Name and email
-are validated before submit. The footer's subscribe field works the same way.
+`StartAProject` posts the enquiry as JSON to `POST /api/contact`
+(`server/contact.ts`), which re-validates every field, verifies the Cloudflare
+Turnstile token, and sends the email over SMTP to `CONTACT_RECEIVER_EMAIL`, with
+the visitor as Reply-To. The form shows sending / sent / failed states in the
+existing status line and clears only after a successful send. The footer's
+email field still composes a `mailto:`.
 
-If a form backend is added later, replace the `window.location.href` assignment in
-`onSubmit` — the field markup and validation can stay as they are.
+Configuration lives in environment variables — see `.env.example`. Only
+`VITE_*` values reach the browser; SMTP credentials and `TURNSTILE_SECRET_KEY`
+are read by the server alone. `VITE_TURNSTILE_SITE_KEY` is inlined at build
+time, so it must be set before `npm run build`.
+
+Turnstile runs in `interaction-only` mode (`components/Turnstile.tsx`) and takes
+no space unless Cloudflare asks the visitor to click. For local testing it can be
+bypassed only when `CONTACT_DISABLE_TURNSTILE` **and** `VITE_DISABLE_TURNSTILE`
+are both `true`; production builds and `npm start` ignore the bypass.
+
+The endpoint accepts same-origin requests only, unless extra origins are listed in
+`CONTACT_ALLOWED_ORIGIN`. Well-formed requests are rate limited to 5 per IP per
+10 minutes (in memory, per instance).
 
 ## Images
 
@@ -113,5 +130,11 @@ element in CSS, so swapping an image never changes the layout.
 
 ## Deployment
 
-Static SPA. `public/_redirects` (Netlify) and `vercel.json` (Vercel) rewrite all paths
-to `index.html` so deep links resolve.
+Railway, as a single Node service: `npm run build`, then `npm start`. The server
+(`server/index.ts`) serves `dist/` with an `index.html` fallback so deep links
+resolve, and handles `/api/contact` on the same origin. Set the variables from
+`.env.example` as Railway service variables (they are needed at build time too,
+for `VITE_TURNSTILE_SITE_KEY`). Railway provides `PORT`.
+
+`public/_redirects` (Netlify) and `vercel.json` (Vercel) remain from the earlier
+static setup; a static-only host would serve the site without the contact API.

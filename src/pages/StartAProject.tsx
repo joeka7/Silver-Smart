@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { SectionIndex, Masthead, Button, TextLink } from '../components/UI'
 import PhoneField from '../components/PhoneField'
 import type { PhoneValue } from '../components/PhoneField'
+import Turnstile, { TURNSTILE_ENABLED } from '../components/Turnstile'
+import type { TurnstileHandle } from '../components/Turnstile'
 import { CONTACT, SOCIALS, SECTORS } from '../data/site'
 import { SocialIcon } from '../components/SocialIcon'
 import type { StyleWithVars } from '../types/css'
@@ -11,6 +13,12 @@ import hero2 from '../imgs/image2.webp'
 const SECTOR_OPTIONS: string[] = SECTORS.map((s) => s.title)
 const SERVICE_OPTIONS: string[] = ['Property', 'Interior design', 'Fit-out', 'Maintenance']
 const PHONE_ERROR = 'Please enter a valid number for the selected country, or leave it blank.'
+const SEND_ERROR = `We could not send your request. Please try again, or email ${CONTACT.email}.`
+const VERIFY_PENDING = 'Please complete the security check, then send again.'
+const VERIFY_ERROR = 'The security check could not load. Please refresh the page and try again.'
+
+type StatusTone = 'info' | 'success' | 'error'
+const TONE_CLASS: Record<StatusTone, string> = { info: 'c-muted', success: 'c-accent', error: 'c-primary' }
 
 /** Phone is optional: only a non-empty, invalid entry is an error. */
 const phoneError = (phone: PhoneValue | null): string | null =>
@@ -18,9 +26,19 @@ const phoneError = (phone: PhoneValue | null): string | null =>
 
 export default function StartAProject() {
   const [services, setServices] = useState<string[]>([])
-  const [status, setStatus] = useState<string | null>(null)
+  const [status, setStatus] = useState<{ text: string; tone: StatusTone } | null>(null)
   const [phone, setPhone] = useState<PhoneValue | null>(null)
   const [phoneMsg, setPhoneMsg] = useState<string | null>(null)
+  const [sending, setSending] = useState(false)
+  // A ref as well as state, so a second click before re-render can't send twice.
+  const sendingRef = useRef(false)
+  const [token, setToken] = useState<string | null>(null)
+  const [turnstileError, setTurnstileError] = useState(false)
+  const turnstileRef = useRef<TurnstileHandle>(null)
+  // Bumped after a successful send to remount the form, clearing every field.
+  const [formKey, setFormKey] = useState(0)
+
+  const info = (text: string): void => setStatus({ text, tone: 'info' })
 
   const onPhoneChange = (value: PhoneValue): void => {
     setPhone(value)
@@ -32,46 +50,75 @@ export default function StartAProject() {
     setServices((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
 
   /**
-   * No backend is defined for this site, so the form composes a mailto: to the
-   * published address rather than silently discarding the enquiry. Behaviour is
-   * unchanged from the previous design — only the presentation is new.
+   * Posts the enquiry to /api/contact, which verifies the Turnstile token and
+   * sends it by SMTP. Client checks are a convenience; the server re-validates.
    */
-  const onSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
+    if (sendingRef.current) return
     const form = new FormData(e.currentTarget)
     const name = (form.get('name') || '').toString().trim()
     const email = (form.get('email') || '').toString().trim()
 
     if (!name || !email) {
-      setStatus('Please add your name and email so we can reply.')
+      info('Please add your name and email so we can reply.')
       return
     }
 
     if (phoneError(phone)) {
       setPhoneMsg(PHONE_ERROR)
-      setStatus('Please check the phone number.')
+      info('Please check the phone number.')
       document.getElementById('f-phone')?.focus()
       return
     }
 
-    const lines = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Phone: ${form.get('phone') || '—'}`,
-      `Location: ${form.get('location') || '—'}`,
-      `Sector: ${form.get('sector') || '—'}`,
-      `Service required: ${services.length ? services.join(', ') : '—'}`,
-      '',
-      'About the project:',
-      (form.get('message') || '—').toString(),
-    ]
+    if (TURNSTILE_ENABLED && !token) {
+      info(turnstileError ? VERIFY_ERROR : VERIFY_PENDING)
+      return
+    }
 
-    window.location.href =
-      `mailto:${CONTACT.email}` +
-      `?subject=${encodeURIComponent(`Project enquiry — ${name}`)}` +
-      `&body=${encodeURIComponent(lines.join('\n'))}`
+    const payload = {
+      name,
+      email,
+      phone: (form.get('phone') || '').toString(),
+      location: (form.get('location') || '').toString(),
+      sector: (form.get('sector') || '').toString(),
+      services,
+      message: (form.get('message') || '').toString(),
+      turnstileToken: token ?? '',
+    }
 
-    setStatus('Opening your email client…')
+    sendingRef.current = true
+    setSending(true)
+    info('Sending your request…')
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(30_000),
+      })
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null
+
+      if (res.ok && data?.ok) {
+        setServices([])
+        setPhone(null)
+        setPhoneMsg(null)
+        setToken(null)
+        setFormKey((k) => k + 1)
+        setStatus({ text: 'Thank you — your request has been sent. We will reply by email.', tone: 'success' })
+      } else {
+        setStatus({ text: data?.error || SEND_ERROR, tone: 'error' })
+        turnstileRef.current?.reset()
+      }
+    } catch {
+      setStatus({ text: SEND_ERROR, tone: 'error' })
+      turnstileRef.current?.reset()
+    } finally {
+      sendingRef.current = false
+      setSending(false)
+    }
   }
 
   return (
@@ -196,7 +243,7 @@ export default function StartAProject() {
                   </div>
                 </div>
 
-                <form className="form" id="ssform" noValidate onSubmit={onSubmit}>
+                <form key={formKey} className="form" id="ssform" noValidate onSubmit={onSubmit}>
                   <div className="form-two">
                     <div className="field">
                       <label htmlFor="f-name">
@@ -267,10 +314,21 @@ export default function StartAProject() {
                     ></textarea>
                   </div>
 
+                  {TURNSTILE_ENABLED && (
+                    <Turnstile
+                      ref={turnstileRef}
+                      onToken={(t) => {
+                        setToken(t)
+                        if (t) setTurnstileError(false)
+                      }}
+                      onError={() => setTurnstileError(true)}
+                    />
+                  )}
+
                   <div className="form-submit">
-                    <Button type="submit">Send request</Button>
-                    <p className="t-label c-muted" id="ssnote" role="status">
-                      {status || <>Or email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></>}
+                    <Button type="submit" disabled={sending} aria-busy={sending}>Send request</Button>
+                    <p className={`t-label ${TONE_CLASS[status?.tone ?? 'info']}`} id="ssnote" role="status">
+                      {status?.text || <>Or email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></>}
                     </p>
                   </div>
 
