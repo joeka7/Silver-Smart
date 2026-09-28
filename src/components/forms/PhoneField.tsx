@@ -9,6 +9,7 @@ import {
 } from 'libphonenumber-js/max'
 import type { CountryCode } from 'libphonenumber-js/max'
 import examples from 'libphonenumber-js/mobile/examples'
+import { detectCountry } from '@/lib/detectCountry'
 
 /** Everything the form needs to know about the phone field, kept as separate parts. */
 export interface PhoneValue {
@@ -73,6 +74,7 @@ function resolvePhone(country: CountryCode, input: string): PhoneValue {
 interface PhoneFieldProps {
   id: string
   name: string
+  /** Used when the visitor's country can't be detected. */
   defaultCountry: CountryCode
   error: string | null
   onChange: (value: PhoneValue) => void
@@ -91,7 +93,7 @@ export function PhoneField({ id, name, defaultCountry, error, onChange, onBlur }
   const ccId = `${uid}-cc`
   const errorId = `${uid}-err`
 
-  const [country, setCountry] = useState<CountryCode>(defaultCountry)
+  const [country, setCountry] = useState<CountryCode>(() => detectCountry() ?? defaultCountry)
   const [input, setInput] = useState('')
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
