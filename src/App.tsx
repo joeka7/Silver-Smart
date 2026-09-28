@@ -1,34 +1,16 @@
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
-import { useEffect } from 'react'
-import Header from './components/Header'
-import SiteFooter from './components/SiteFooter'
-import { useReveals, useNavScrollState, useScrollProgress } from './hooks/useSiteBehaviour'
+import { Header, ScrollManager, SiteFooter } from '@/components/layout'
+import { useReveals, useNavScrollState, useScrollProgress } from '@/hooks/useSiteBehaviour'
 
-import Home from './pages/Home'
-import About from './pages/About'
-import Services from './pages/Services'
-import ServiceDetail from './pages/ServiceDetail'
-import Projects from './pages/Projects'
-import ProjectDetail from './pages/ProjectDetail'
-import Blog from './pages/Blog'
-import StartAProject from './pages/StartAProject'
-import NotFound from './pages/NotFound'
-
-/** Reset scroll on navigation, but honour in-page anchors (#s01 … #s06). */
-function ScrollManager(): null {
-  const { pathname, hash } = useLocation()
-  useEffect(() => {
-    if (hash) {
-      const el = document.querySelector(hash)
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        return
-      }
-    }
-    window.scrollTo(0, 0)
-  }, [pathname, hash])
-  return null
-}
+import Home from '@/pages/Home'
+import About from '@/pages/About'
+import Services from '@/pages/Services'
+import ServiceDetail from '@/pages/ServiceDetail'
+import Projects from '@/pages/Projects'
+import ProjectDetail from '@/pages/ProjectDetail'
+import Blog from '@/pages/Blog'
+import StartAProject from '@/pages/StartAProject'
+import NotFound from '@/pages/NotFound'
 
 export default function App() {
   const { pathname } = useLocation()

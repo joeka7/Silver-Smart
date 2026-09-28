@@ -1,4 +1,4 @@
-import heroSec from '../imgs/hero-sec.webp'
+import heroSec from '@/assets/images/hero-sec.webp'
 
 /**
  * Full-bleed hero media for the Home page.
@@ -8,7 +8,7 @@ import heroSec from '../imgs/hero-sec.webp'
  * Decorative — the hero's meaning is carried by the headline beside it — so the
  * image is hidden from assistive technology.
  */
-export default function HeroMedia() {
+export function HeroMedia() {
   return (
     <div className="hero-media" aria-hidden="true">
       <img

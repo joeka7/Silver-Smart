@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import logo from '../imgs/logo.webp'
-import { NAV, NAV_CTA, CONTACT, SOCIALS } from '../data/site'
-import { SocialIcon } from './SocialIcon'
-import { HeaderButton as Button } from './UI'
-import { MenuToggleIcon } from './ui/menu-toggle-icon'
+import logo from '@/assets/images/logo.webp'
+import { NAV, NAV_CTA, CONTACT, SOCIALS } from '@/data/site'
+import { SocialIcon, HeaderButton as Button, MenuToggleIcon } from '@/components/ui'
 
 /**
  * Fixed glassmorphic header, per the Stitch export.
@@ -13,7 +11,7 @@ import { MenuToggleIcon } from './ui/menu-toggle-icon'
  * below 1100px both collapse into the burger-driven drawer. The drawer's
  * open state is mirrored onto <body> so layout.css can lock scrolling.
  */
-export default function Header() {
+export function Header() {
   const [open, setOpen] = useState<boolean>(false)
   const { pathname } = useLocation()
 

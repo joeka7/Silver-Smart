@@ -16,7 +16,7 @@ import { handleContact, missingContactConfig, turnstileBypassed } from './contac
 const PORT = Number(process.env.PORT) || 3001
 const DIST = fileURLToPath(new URL('../dist', import.meta.url))
 
-// SPA fallback (unknown paths → index.html) matches the previous Netlify/Vercel rewrites.
+// SPA fallback: unknown paths → index.html, so deep links resolve.
 // Hashed build assets are immutable; everything else is revalidated.
 const serveStatic = existsSync(DIST)
   ? sirv(DIST, {

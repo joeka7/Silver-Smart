@@ -1,5 +1,6 @@
-import { Masthead, TextLink, Button } from '../components/UI'
-import type { StyleWithVars } from '../types/css'
+import { TextLink, Button } from '@/components/ui'
+import { Masthead } from '@/components/sections'
+import type { StyleWithVars } from '@/types/css'
 
 export default function NotFound() {
   return (

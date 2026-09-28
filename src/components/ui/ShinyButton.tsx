@@ -2,7 +2,7 @@ import type React from 'react'
 import { useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import type { LinkProps } from 'react-router-dom'
-import { cn } from '../../lib/utils'
+import { cn } from '@/lib/utils'
 
 /*
  * ShinyButton — adapted from the 21st.dev reference.

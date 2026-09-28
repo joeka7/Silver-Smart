@@ -1,9 +1,9 @@
 import { useParams, Navigate, Link } from 'react-router-dom'
-import ClosingCta from '../components/ClosingCta'
-import { SectionIndex, Masthead, EditorialRows, TextLink } from '../components/UI'
-import { SERVICES, SERVICE_IMAGE, isServiceSlug } from '../data/services'
-import type { StyleWithVars } from '../types/css'
-import hero5 from '../imgs/image5.webp'
+import { ClosingCta, Masthead, EditorialRows } from '@/components/sections'
+import { SectionIndex, TextLink } from '@/components/ui'
+import { SERVICES, SERVICE_IMAGE, isServiceSlug } from '@/data/services'
+import type { StyleWithVars } from '@/types/css'
+import hero5 from '@/assets/images/image5.webp'
 
 /** One template for all four service pages — they share structure in the design. */
 export default function ServiceDetail() {

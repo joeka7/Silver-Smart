@@ -132,7 +132,7 @@
   align-items: center;
   flex: 0 0 auto;
 }
-/* Animated burger/close icon (components/ui/menu-toggle-icon.tsx).
+/* Animated burger/close icon (components/ui/MenuToggleIcon.tsx).
    32px box → 20px-wide bars, matching the previous burger. */
 .menu-toggle-icon {
   display: block;
@@ -1423,7 +1423,7 @@ body.mopen {
 /* ----------------------------------------------------------------------------
    Phone field — country selector + calling code + national number.
    Flags are regional-indicator emoji drawn with the Twemoji Country Flags font
-   (Twemoji art © Twitter, CC-BY 4.0 — see fonts/TwemojiCountryFlags.LICENSE.md),
+   (Twemoji art © Twitter, CC-BY 4.0 — see assets/fonts/TwemojiCountryFlags.LICENSE.md),
    because Windows ships no flag glyphs. unicode-range keeps it off every other
    character, and it only downloads once a flag is actually rendered.
    ------------------------------------------------------------------------- */
@@ -1432,7 +1432,7 @@ body.mopen {
   font-family: "Twemoji Country Flags";
   unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E0063, U+E0065, U+E0067, U+E006C, U+E006E, U+E0073-E0074,
     U+E0077, U+E007F;
-  src: url("../fonts/TwemojiCountryFlags.woff2") format("woff2");
+  src: url("../assets/fonts/TwemojiCountryFlags.woff2") format("woff2");
   font-display: swap;
 }
 

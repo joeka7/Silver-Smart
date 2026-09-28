@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
-import ClosingCta from '../components/ClosingCta'
-import { SectionIndex, Masthead, EditorialRows, PullQuote, TextLink } from '../components/UI'
-import { TESTIMONIALS } from '../data/site'
-import type { NumberedItem } from '../data/site'
-import type { StyleWithVars } from '../types/css'
-import hero2 from '../imgs/image2.webp'
-import hero3 from '../imgs/image3.webp'
-import hero4 from '../imgs/image4.webp'
-import hero5 from '../imgs/image5.webp'
+import { ClosingCta, Masthead, EditorialRows, PullQuote } from '@/components/sections'
+import { SectionIndex, TextLink } from '@/components/ui'
+import { TESTIMONIALS } from '@/data/site'
+import type { NumberedItem } from '@/data/site'
+import type { StyleWithVars } from '@/types/css'
+import hero2 from '@/assets/images/image2.webp'
+import hero3 from '@/assets/images/image3.webp'
+import hero4 from '@/assets/images/image4.webp'
+import hero5 from '@/assets/images/image5.webp'
 
 const DETAILS: NumberedItem[] = [
   { n: '01', title: 'Layout', desc: 'Circulation and sightlines studied against how the home is actually lived in, then fixed in a complete project layout.' },

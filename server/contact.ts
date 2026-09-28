@@ -181,7 +181,10 @@ interface Enquiry {
 
 type Parsed = { ok: true; enquiry: Enquiry; token: string } | { ok: false; error: string }
 
+// Matching control characters is the point: they are rejected to block header injection.
+// eslint-disable-next-line no-control-regex
 const SINGLE_LINE_CONTROL = /[\u0000-\u001f\u007f]/
+// eslint-disable-next-line no-control-regex
 const MULTI_LINE_CONTROL = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/
 // No separators or brackets, so the address can't smuggle a second recipient into Reply-To.
 const EMAIL = /^[^\s@<>()[\]",;:\\]+@[^\s@<>()[\]",;:\\]+\.[^\s@<>()[\]",;:\\]+$/

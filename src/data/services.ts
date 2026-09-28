@@ -1,11 +1,11 @@
 // The four service pages share one structure in the design; only content differs.
 // Content is transcribed verbatim from service-*.html.
 
-import type { NumberedItem } from './site'
-import imgProperty from '../imgs/image.webp'
-import imgInteriorDesign from '../imgs/image2.webp'
-import imgFitOut from '../imgs/image3.webp'
-import imgMaintenance from '../imgs/image4.webp'
+import type { NumberedItem } from '@/data/site'
+import imgProperty from '@/assets/images/image.webp'
+import imgInteriorDesign from '@/assets/images/image2.webp'
+import imgFitOut from '@/assets/images/image3.webp'
+import imgMaintenance from '@/assets/images/image4.webp'
 
 /** The link to the following service page in the fixed 01 → 04 → 01 rotation. */
 export interface ServiceNextLink {

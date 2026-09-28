@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
-import closingVid from '../videos/hero-vid.mp4'
-import { cn } from '../lib/utils'
+import closingVid from '@/assets/videos/hero-vid.mp4'
+import { cn } from '@/lib/utils'
 
 interface ClosingCtaProps {
   /** Usually a fragment with a highlighted span, so ReactNode. */
@@ -17,7 +17,7 @@ interface ClosingCtaProps {
  * Closing CTA band — the video panel that ends every interior page.
  * Mirrors "SECTION 05 // FINAL STUDIO CALL TO ACTION" in the Stitch export.
  */
-export default function ClosingCta({ heading, blurb, eyebrow = 'Commence a dialogue', actions, className }: ClosingCtaProps) {
+export function ClosingCta({ heading, blurb, eyebrow = 'Commence a dialogue', actions, className }: ClosingCtaProps) {
   return (
     <section className={cn('section', className)}>
       <div className="wrap">

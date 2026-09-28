@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import ClosingCta from '../components/ClosingCta'
-import { Masthead, SectionIndex, Button } from '../components/UI'
-import { SERVICE_LINKS } from '../data/site'
-import type { StyleWithVars } from '../types/css'
+import { ClosingCta, Masthead } from '@/components/sections'
+import { SectionIndex, Button } from '@/components/ui'
+import { SERVICE_LINKS } from '@/data/site'
+import type { StyleWithVars } from '@/types/css'
 
 /**
  * Blog index.

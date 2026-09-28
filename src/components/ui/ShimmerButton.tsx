@@ -2,7 +2,7 @@ import React from 'react'
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import type { LinkProps } from 'react-router-dom'
-import { cn } from '../../lib/utils'
+import { cn } from '@/lib/utils'
 
 /*
  * ShimmerButton — adapted from the reference component.

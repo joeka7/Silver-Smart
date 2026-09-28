@@ -23,6 +23,7 @@ declare global {
 const SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? ''
 
 /** The local-testing bypass never applies to a production build. */
+// eslint-disable-next-line react-refresh/only-export-components -- build-time constant, never changes during HMR
 export const TURNSTILE_ENABLED = import.meta.env.PROD || import.meta.env.VITE_DISABLE_TURNSTILE !== 'true'
 
 const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
@@ -58,7 +59,7 @@ interface TurnstileProps {
   onError: () => void
 }
 
-const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Turnstile({ onToken, onError }, ref) {
+export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Turnstile({ onToken, onError }, ref) {
   const containerRef = useRef<HTMLDivElement>(null)
   const widgetId = useRef<string | null>(null)
   const [interactive, setInteractive] = useState(false)
@@ -115,4 +116,3 @@ const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Turnstile
   return <div ref={containerRef} className={interactive ? 'form-turnstile is-interactive' : 'form-turnstile'} />
 })
 
-export default Turnstile

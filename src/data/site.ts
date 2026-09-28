@@ -1,7 +1,7 @@
 // Silver Smart — content extracted verbatim from the Claude Design source files.
 // Company facts (address, phone, socials) match the design bundle and silversmartuae.com.
 
-import { SERVICES, SERVICE_SLUGS } from './services'
+import { SERVICES, SERVICE_SLUGS } from '@/data/services'
 
 /** A telephone/mail entry: the text shown, and the href it dials. */
 export interface ContactLink {

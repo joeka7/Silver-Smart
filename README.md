@@ -18,6 +18,8 @@ npm run build    # site to dist/, server to dist-server/
 npm start        # production server: site + API on $PORT
 npm run preview  # serve the production build without the API
 npm run typecheck
+npm run lint     # ESLint (typescript-eslint + react-hooks)
+npm run check    # typecheck + lint
 ```
 
 ## Design system — "Architectural Prestige"
@@ -46,16 +48,30 @@ The visual system is a React implementation of the Stitch design export. Its tok
 
 ```
 src/
-  components/   Header, SiteFooter, HeroMedia, ClosingCta,
-                UI (Button, SectionIndex, Masthead, Ledger, EditorialRows, FieldGrid, …)
-    ui/         ShimmerButton (site CTAs), ShinyButton (header CTA)
-  lib/          utils — cn() class-name joiner
-  pages/        Home, About, Services, ServiceDetail, Projects, ProjectDetail,
-                Blog, StartAProject, NotFound
-  hooks/        useSiteBehaviour — scroll reveals, nav state, drift, progress
+  assets/
+    images/     photography + logo (imported, so Vite fingerprints them)
+    videos/     closing-panel video
+    fonts/      Twemoji country-flag font
+  components/
+    ui/         atoms — Button, HeaderButton, TextLink, SectionIndex, SocialIcon,
+                MenuToggleIcon, ShimmerButton, ShinyButton
+    sections/   page blocks — Masthead, Ledger, EditorialRows, FieldGrid,
+                PullQuote, HeroMedia, ClosingCta
+    layout/     site chrome — Header, SiteFooter, ScrollManager
+    forms/      PhoneField, Turnstile
   data/         site.ts, services.ts — all page copy
+  hooks/        useSiteBehaviour — scroll reveals, nav state, drift, progress
+  lib/          utils — cn() class-name joiner
+  pages/        one file per route
   styles/       theme.css (tokens + primitives), layout.css (structure)
+  types/        shared TS helpers and module augmentations
+server/         production server + contact endpoint (Railway)
 ```
+
+Each `components/*` folder has an `index.ts`, so pages import from the folder
+(`import { Button } from '@/components/ui'`). `@/` resolves to `src/`
+(configured in `vite.config.ts` and `tsconfig.app.json`). Components use named
+exports; pages use default exports.
 
 The four service pages share one `ServiceDetail` template driven by `data/services.ts`,
 since they are structurally identical.
@@ -113,10 +129,10 @@ The endpoint accepts same-origin requests only, unless extra origins are listed 
 
 ## Images
 
-Photography lives in `src/imgs/` and is imported directly, so Vite fingerprints and
+Photography lives in `src/assets/images/` and is imported directly, so Vite fingerprints and
 optimises it. `HeroMedia` renders the Home hero as a single still (`hero-sec.webp`),
 fetched eagerly at high priority. `ClosingCta` plays the branded video
-(`src/videos/hero-vid.mp4`) behind the closing panel on every page.
+(`src/assets/videos/hero-vid.mp4`) behind the closing panel on every page.
 
 Aspect ratios are owned by the containing `.frame` / `.card-media` / `.sector-media`
 element in CSS, so swapping an image never changes the layout.
@@ -130,11 +146,9 @@ element in CSS, so swapping an image never changes the layout.
 
 ## Deployment
 
-Railway, as a single Node service: `npm run build`, then `npm start`. The server
-(`server/index.ts`) serves `dist/` with an `index.html` fallback so deep links
-resolve, and handles `/api/contact` on the same origin. Set the variables from
-`.env.example` as Railway service variables (they are needed at build time too,
-for `VITE_TURNSTILE_SITE_KEY`). Railway provides `PORT`.
-
-`public/_redirects` (Netlify) and `vercel.json` (Vercel) remain from the earlier
-static setup; a static-only host would serve the site without the contact API.
+Railway, as a single Node service. `railway.json` pins the build (`npm run build`)
+and start (`npm start`) commands and a `/` healthcheck, overriding any dashboard
+settings. The server (`server/index.ts`) serves `dist/` with an `index.html`
+fallback so deep links resolve, and handles `/api/contact` on the same origin.
+Set the variables from `.env.example` as Railway service variables (they are
+needed at build time too, for `VITE_TURNSTILE_SITE_KEY`). Railway provides `PORT`.

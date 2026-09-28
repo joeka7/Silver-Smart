@@ -1,12 +1,11 @@
 import { Link } from 'react-router-dom'
-import HeroMedia from '../components/HeroMedia'
-import ClosingCta from '../components/ClosingCta'
-import { SectionIndex, TextLink, Button } from '../components/UI'
-import { HOME_SERVICES, HOME_WORK, WHY, CONTACT } from '../data/site'
-import type { StyleWithVars } from '../types/css'
-import introImg from '../imgs/Introduction.webp'
-import hero3 from '../imgs/image3.webp'
-import hero4 from '../imgs/image4.webp'
+import { HeroMedia, ClosingCta } from '@/components/sections'
+import { SectionIndex, TextLink, Button } from '@/components/ui'
+import { HOME_SERVICES, HOME_WORK, WHY, CONTACT } from '@/data/site'
+import type { StyleWithVars } from '@/types/css'
+import introImg from '@/assets/images/Introduction.webp'
+import hero3 from '@/assets/images/image3.webp'
+import hero4 from '@/assets/images/image4.webp'
 
 /** Scope tags per discipline, drawn from each service's published scope. */
 const SERVICE_TAGS: Record<string, string[]> = {

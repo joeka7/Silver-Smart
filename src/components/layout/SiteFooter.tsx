@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
-import logo from '../imgs/logo.webp'
-import { NAV, SERVICE_LINKS, SOCIALS, CONTACT } from '../data/site'
-import { SocialIcon } from './SocialIcon'
+import logo from '@/assets/images/logo.webp'
+import { NAV, SERVICE_LINKS, SOCIALS, CONTACT } from '@/data/site'
+import { SocialIcon } from '@/components/ui'
 
 /**
  * Site footer — the four-column architectural register from the Stitch export.
  */
-export default function SiteFooter() {
+export function SiteFooter() {
   return (
     <footer className="ftr">
       <div className="wrap ftr-in">

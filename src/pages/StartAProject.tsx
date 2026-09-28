@@ -1,14 +1,12 @@
 import { useRef, useState } from 'react'
 import type { FormEvent } from 'react'
-import { SectionIndex, Masthead, Button, TextLink } from '../components/UI'
-import PhoneField from '../components/PhoneField'
-import type { PhoneValue } from '../components/PhoneField'
-import Turnstile, { TURNSTILE_ENABLED } from '../components/Turnstile'
-import type { TurnstileHandle } from '../components/Turnstile'
-import { CONTACT, SOCIALS, SECTORS } from '../data/site'
-import { SocialIcon } from '../components/SocialIcon'
-import type { StyleWithVars } from '../types/css'
-import hero2 from '../imgs/image2.webp'
+import { SectionIndex, Button, TextLink, SocialIcon } from '@/components/ui'
+import { Masthead } from '@/components/sections'
+import { PhoneField, Turnstile, TURNSTILE_ENABLED } from '@/components/forms'
+import type { PhoneValue, TurnstileHandle } from '@/components/forms'
+import { CONTACT, SOCIALS, SECTORS } from '@/data/site'
+import type { StyleWithVars } from '@/types/css'
+import hero2 from '@/assets/images/image2.webp'
 
 const SECTOR_OPTIONS: string[] = SECTORS.map((s) => s.title)
 const SERVICE_OPTIONS: string[] = ['Property', 'Interior design', 'Fit-out', 'Maintenance']

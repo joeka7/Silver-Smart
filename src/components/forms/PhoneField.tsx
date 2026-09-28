@@ -56,7 +56,7 @@ const placeholderFor = (country: CountryCode): string => {
   return example.formatInternational().replace(`+${example.countryCallingCode}`, '').trim()
 }
 
-export function resolvePhone(country: CountryCode, input: string): PhoneValue {
+function resolvePhone(country: CountryCode, input: string): PhoneValue {
   const callingCode = `+${getCountryCallingCode(country)}`
   const isEmpty = input.replace(/\D/g, '') === ''
   const parsed = isEmpty ? undefined : parsePhoneNumberFromString(input, country)
@@ -85,7 +85,7 @@ interface PhoneFieldProps {
  * national number only; a hidden input carries the E.164 value under `name`,
  * so the form's FormData submission reads a proper international number.
  */
-export default function PhoneField({ id, name, defaultCountry, error, onChange, onBlur }: PhoneFieldProps) {
+export function PhoneField({ id, name, defaultCountry, error, onChange, onBlur }: PhoneFieldProps) {
   const uid = useId()
   const listId = `${uid}-list`
   const ccId = `${uid}-cc`

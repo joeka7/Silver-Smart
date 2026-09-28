@@ -1,9 +1,9 @@
-import ClosingCta from '../components/ClosingCta'
-import { SectionIndex, Masthead, FieldGrid, Button, TextLink } from '../components/UI'
-import { SPECIALISATION } from '../data/site'
-import { SERVICES, SERVICE_SLUGS, SERVICE_IMAGE } from '../data/services'
-import type { ServiceSlug } from '../data/services'
-import type { StyleWithVars } from '../types/css'
+import { ClosingCta, Masthead, FieldGrid } from '@/components/sections'
+import { SectionIndex, Button, TextLink } from '@/components/ui'
+import { SPECIALISATION } from '@/data/site'
+import { SERVICES, SERVICE_SLUGS, SERVICE_IMAGE } from '@/data/services'
+import type { ServiceSlug } from '@/data/services'
+import type { StyleWithVars } from '@/types/css'
 
 /** Short technical register shown under each discipline's scope list. */
 const DISCIPLINE_TAG: Record<ServiceSlug, string> = {
