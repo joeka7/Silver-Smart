@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import logo from '../imgs/logo.webp'
-import { NAV, NAV_CTA, CONTACT } from '../data/site'
+import { NAV, NAV_CTA, CONTACT, SOCIALS } from '../data/site'
+import { SocialIcon } from './SocialIcon'
 import { HeaderButton as Button } from './UI'
 import { MenuToggleIcon } from './ui/menu-toggle-icon'
 
@@ -90,6 +91,21 @@ export default function Header() {
           <span>{CONTACT.office}</span>
           <a href={`mailto:${CONTACT.email}`} tabIndex={open ? 0 : -1}>{CONTACT.email}</a>
           <a href={CONTACT.phone.href} tabIndex={open ? 0 : -1}>{CONTACT.phone.label}</a>
+          <div className="mnav-social">
+            {SOCIALS.map((s) => (
+              <a
+                key={s.href}
+                className="social-link"
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                tabIndex={open ? 0 : -1}
+              >
+                <SocialIcon name={s.label} />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </>

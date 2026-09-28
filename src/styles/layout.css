@@ -232,6 +232,14 @@ body.mopen {
   color: var(--outline);
 }
 
+.mnav-social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: var(--space-sm);
+}
+
 @media (min-width: 1100px) {
   .mnav {
     display: none;
