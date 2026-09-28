@@ -15,7 +15,7 @@ export default function SiteFooter() {
             <Link to="/" className="hdr-mark" aria-label="Silver Smart, home">
               <img className="hdr-logo" src={logo} alt="" width="931" height="1024" />
             </Link>
-            <p className="t-small c-dim" style={{ maxWidth: '34ch' }}>
+            <p style={{ maxWidth: '34ch' }}>
               A property, interior design, fit-out and general maintenance company based in the United Arab
               Emirates — creating inspiring spaces and maintaining properties to the highest standards.
             </p>
@@ -42,9 +42,6 @@ export default function SiteFooter() {
 
           <div className="ftr-wide">
             <span className="t-label c-accent">Dispatch &amp; Enquiries</span>
-            <p className="t-small c-dim">
-              Tell us about the property, the brief and the timeline — we will take it from there.
-            </p>
             <div className="t-label c-muted">
               <a href={CONTACT.phone.href}>{CONTACT.phone.label}</a>
               {' · '}

@@ -1324,27 +1324,45 @@ body.mopen {
   gap: var(--space-sm);
   padding: 0.75rem;
   background: var(--surface-container);
+  position: relative;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: background 0.15s var(--ease);
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease);
 }
 /* .opt is a <label> inside .field, so `.field label` (display: block; padding: 0)
-   outranks it and leaves the checkbox and text off-centre at the top of the box.
-   Restore only the vertical centring and padding; gap stays 0 so the horizontal
-   layout is exactly as it rendered before. */
+   outranks it and leaves the text off-centre at the top of the box.
+   Restore the vertical centring and padding, with 10px on the left and right. */
 .field .opt {
   display: flex;
   align-items: center;
   gap: 0;
   padding-block: 0.75rem;
+  padding-inline: 10px;
 }
 .opt:hover {
   background: var(--surface-container-high);
 }
+/* The checkbox stays in the DOM for keyboard and screen-reader use, but is
+   visually hidden; the selected state is shown by the border instead. */
 .opt input {
-  accent-color: var(--primary-container);
-  width: 1rem;
-  height: 1rem;
-  flex: 0 0 auto;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  opacity: 0;
+}
+.opt:has(input:checked) {
+  border-color: var(--primary-container);
+}
+.opt:has(input:checked) span {
+  color: var(--on-surface);
+}
+.opt:has(input:focus-visible) {
+  outline: 2px solid var(--primary-container);
+  outline-offset: 2px;
 }
 .opt span {
   font-size: var(--body-sm);
