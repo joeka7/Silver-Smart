@@ -1080,7 +1080,7 @@ body.mopen {
 }
 /* The footer mark stands alone without the wordmark, so it carries more size than the header's. */
 .ftr-brand .hdr-logo {
-  height: 5.5rem;
+  height: 8.5rem;
 }
 .ftr-col {
   grid-column: span 2;
@@ -1130,36 +1130,6 @@ body.mopen {
 .ftr-col li a:hover,
 .ftr-wide li a:hover {
   color: var(--on-surface);
-}
-
-.ftr-sub {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  border-bottom: 1px solid var(--hairline-strong);
-  padding-bottom: 0.5rem;
-}
-.ftr-sub input {
-  background: transparent;
-  border: 0;
-  width: 100%;
-  min-width: 0;
-  min-height: 2.75rem;
-  color: var(--on-surface);
-  font-family: var(--font-mono);
-  font-size: var(--label-technical);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 0.25rem 0;
-}
-.ftr-sub input::placeholder {
-  color: var(--outline);
-}
-.ftr-sub input:focus {
-  outline: none;
-}
-.ftr-sub .btn {
-  flex: 0 0 auto;
 }
 
 .ftr-bot {
@@ -1315,6 +1285,19 @@ body.mopen {
   outline: none;
   background: var(--surface-container-high);
   border-color: var(--primary-container);
+}
+/* Browsers paint autofilled fields with their own light background, which
+   can't be overridden directly; delaying the colour change indefinitely keeps
+   each field's own background (including the phone input's transparent one). */
+.field input:-webkit-autofill {
+  -webkit-text-fill-color: var(--on-surface);
+  caret-color: var(--on-surface);
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+.field input:autofill {
+  -webkit-text-fill-color: var(--on-surface);
+  caret-color: var(--on-surface);
+  transition: background-color 600000s 0s, color 600000s 0s;
 }
 
 .field fieldset {
