@@ -252,12 +252,16 @@ async function verifyTurnstile(token: string, ip: string): Promise<'ok' | 'rejec
       console.error('[contact] Turnstile verification request failed', { status: r.status })
       return 'unavailable'
     }
-    const result = (await r.json()) as { success?: unknown; 'error-codes'?: unknown }
-    if (result.success === true) return 'ok'
-    console.warn('[contact] Turnstile rejected the token', { codes: result['error-codes'] })
+    const result = (await r.json()) as { success?: unknown; 'error-codes'?: unknown; hostname?: unknown }
+    if (result.success === true) {
+      console.log('[contact] Turnstile verified', { hostname: result.hostname })
+      return 'ok'
+    }
+    console.warn('[contact] Turnstile rejected the token', { codes: result['error-codes'], hostname: result.hostname })
     return 'rejected'
   } catch (err) {
-    console.error('[contact] Turnstile verification unavailable', { error: (err as Error).name })
+    const e = err as Error & { cause?: { code?: unknown } }
+    console.error('[contact] Turnstile verification unavailable', { error: e.name, cause: e.cause?.code })
     return 'unavailable'
   }
 }
@@ -361,7 +365,10 @@ export async function handleContact(req: IncomingMessage, res: ServerResponse): 
   }
 
   if (!TURNSTILE_BYPASS) {
-    if (!parsed.token) return fail(res, 400, MSG.verification)
+    if (!parsed.token) {
+      console.warn('[contact] Request had no Turnstile token')
+      return fail(res, 400, MSG.verification)
+    }
     const verdict = await verifyTurnstile(parsed.token, ip)
     if (verdict === 'rejected') return fail(res, 400, MSG.verification)
     if (verdict === 'unavailable') return fail(res, 503, MSG.unavailable)
@@ -375,5 +382,6 @@ export async function handleContact(req: IncomingMessage, res: ServerResponse): 
     return fail(res, 502, MSG.unavailable)
   }
 
+  console.log('[contact] Enquiry delivered')
   send(res, 200, { ok: true })
 }
