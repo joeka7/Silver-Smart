@@ -1,11 +1,10 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 
 /**
  * Cloudflare Turnstile for the enquiry form.
  *
- * Runs in `interaction-only` mode, so for most visitors it is invisible and
- * takes no space; the widget only appears when Cloudflare needs the visitor to
- * click. The token it issues is sent with the form and verified server-side.
+ * The widget is always visible above the submit button. The token it issues
+ * is sent with the form and verified server-side.
  */
 
 interface TurnstileApi {
@@ -62,7 +61,6 @@ interface TurnstileProps {
 export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Turnstile({ onToken, onError }, ref) {
   const containerRef = useRef<HTMLDivElement>(null)
   const widgetId = useRef<string | null>(null)
-  const [interactive, setInteractive] = useState(false)
 
   const onTokenRef = useRef(onToken)
   onTokenRef.current = onToken
@@ -89,7 +87,6 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
         widgetId.current = api.render(containerRef.current, {
           sitekey: SITE_KEY,
           theme: 'dark',
-          appearance: 'interaction-only',
           // `flexible` needs 300px; narrow phones get the compact square instead.
           size: window.matchMedia('(max-width: 399px)').matches ? 'compact' : 'flexible',
           callback: (token: string) => onTokenRef.current(token),
@@ -99,8 +96,6 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
             onTokenRef.current(null)
             onErrorRef.current()
           },
-          'before-interactive-callback': () => setInteractive(true),
-          'after-interactive-callback': () => setInteractive(false),
         })
       })
       .catch(() => {
@@ -113,6 +108,6 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
     }
   }, [])
 
-  return <div ref={containerRef} className={interactive ? 'form-turnstile is-interactive' : 'form-turnstile'} />
+  return <div ref={containerRef} className="form-turnstile" />
 })
 

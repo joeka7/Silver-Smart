@@ -118,8 +118,8 @@ Configuration lives in environment variables — see `.env.example`. Only
 are read by the server alone. `VITE_TURNSTILE_SITE_KEY` is inlined at build
 time, so it must be set before `npm run build`.
 
-Turnstile runs in `interaction-only` mode (`components/Turnstile.tsx`) and takes
-no space unless Cloudflare asks the visitor to click. For local testing it can be
+The Turnstile widget (`components/Turnstile.tsx`) is always visible above the
+submit button. For local testing it can be
 bypassed only when `CONTACT_DISABLE_TURNSTILE` **and** `VITE_DISABLE_TURNSTILE`
 are both `true`; production builds and `npm start` ignore the bypass.
 

@@ -1394,17 +1394,15 @@ body.mopen {
   }
 }
 
-/* Turnstile runs invisibly (interaction-only). Until Cloudflare asks the visitor
-   to interact it occupies no space: the negative margin cancels the .form gap. */
+/* Reserve the widget's height so the form doesn't jump when it renders
+   (65px normal/flexible, 140px compact on narrow phones). */
 .form-turnstile {
-  height: 0;
-  overflow: hidden;
-  margin-top: calc(-1 * var(--space-lg));
+  min-height: 65px;
 }
-.form-turnstile.is-interactive {
-  height: auto;
-  overflow: visible;
-  margin-top: 0;
+@media (max-width: 399px) {
+  .form-turnstile {
+    min-height: 140px;
+  }
 }
 
 .form-note {
