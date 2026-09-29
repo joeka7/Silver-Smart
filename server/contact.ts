@@ -68,7 +68,7 @@ const MSG = {
   tooLarge: 'The message is too long. Please shorten it and try again.',
   rateLimited: 'Too many requests. Please wait a few minutes and try again.',
   malformed: 'Some of the details could not be read. Please check the form and try again.',
-  nameEmail: 'Please add your name and email so we can reply.',
+  required: 'Please fill in every field before sending.',
   email: 'Please enter a valid email address.',
   phone: 'Please check the phone number.',
   verification: 'Verification failed. Please try again.',
@@ -190,7 +190,7 @@ const MULTI_LINE_CONTROL = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/
 const EMAIL = /^[^\s@<>()[\]",;:\\]+@[^\s@<>()[\]",;:\\]+\.[^\s@<>()[\]",;:\\]+$/
 const E164 = /^\+\d{6,15}$/
 
-/** Optional string field: absent → '', wrong type, too long or control characters → null. */
+/** String field: absent → '', wrong type, too long or control characters → null. */
 function field(value: unknown, max: number, multiline = false): string | null {
   if (value === undefined || value === null) return ''
   if (typeof value !== 'string') return null
@@ -231,9 +231,12 @@ function parseEnquiry(raw: string): Parsed {
     if (!services.includes(v)) services.push(v)
   }
 
-  if (!name || !email) return { ok: false, error: MSG.nameEmail }
+  // Every field is required.
+  if (!name || !email || !phone || !location || !sector || !services.length || !message) {
+    return { ok: false, error: MSG.required }
+  }
   if (!EMAIL.test(email)) return { ok: false, error: MSG.email }
-  if (phone && !(E164.test(phone) && isValidPhoneNumber(phone))) return { ok: false, error: MSG.phone }
+  if (!(E164.test(phone) && isValidPhoneNumber(phone))) return { ok: false, error: MSG.phone }
 
   return { ok: true, enquiry: { name, email, phone, location, sector, services, message }, token }
 }
@@ -280,13 +283,13 @@ async function deliver(e: Enquiry): Promise<void> {
   const lines = [
     `Name: ${e.name}`,
     `Email: ${e.email}`,
-    `Phone: ${e.phone || '—'}`,
-    `Location: ${e.location || '—'}`,
-    `Sector: ${e.sector || '—'}`,
-    `Service required: ${e.services.length ? e.services.join(', ') : '—'}`,
+    `Phone: ${e.phone}`,
+    `Location: ${e.location}`,
+    `Sector: ${e.sector}`,
+    `Service required: ${e.services.join(', ')}`,
     '',
     'About the project:',
-    e.message || '—',
+    e.message,
     '',
     '—',
     `Sent from the Start a Project form on ${new Date().toISOString()}`,

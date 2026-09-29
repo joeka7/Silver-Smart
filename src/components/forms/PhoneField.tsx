@@ -76,6 +76,7 @@ interface PhoneFieldProps {
   name: string
   /** Used when the visitor's country can't be detected. */
   defaultCountry: CountryCode
+  required?: boolean
   error: string | null
   onChange: (value: PhoneValue) => void
   /** Fires when focus leaves the whole field (input and country selector). */
@@ -87,7 +88,7 @@ interface PhoneFieldProps {
  * national number only; a hidden input carries the E.164 value under `name`,
  * so the form's FormData submission reads a proper international number.
  */
-export function PhoneField({ id, name, defaultCountry, error, onChange, onBlur }: PhoneFieldProps) {
+export function PhoneField({ id, name, defaultCountry, required, error, onChange, onBlur }: PhoneFieldProps) {
   const uid = useId()
   const listId = `${uid}-list`
   const ccId = `${uid}-cc`
@@ -304,6 +305,7 @@ export function PhoneField({ id, name, defaultCountry, error, onChange, onBlur }
           value={input}
           onChange={onInput}
           maxLength={24}
+          required={required}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${ccId} ${errorId}` : ccId}
         />

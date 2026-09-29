@@ -10,7 +10,9 @@ import hero2 from '@/assets/images/image2.webp'
 
 const SECTOR_OPTIONS: string[] = SECTORS.map((s) => s.title)
 const SERVICE_OPTIONS: string[] = ['Property', 'Interior design', 'Fit-out', 'Maintenance']
-const PHONE_ERROR = 'Please enter a valid number for the selected country, or leave it blank.'
+const PHONE_REQUIRED = 'Phone number is required.'
+const PHONE_ERROR = 'Please enter a valid number for the selected country.'
+const SERVICES_REQUIRED = 'Please select at least one service.'
 const SEND_ERROR = `We could not send your request. Please try again, or email ${CONTACT.email}.`
 const VERIFY_PENDING = 'Please complete the security check, then send again.'
 const VERIFY_ERROR = 'The security check could not load. Please refresh the page and try again.'
@@ -21,22 +23,41 @@ const TONE_CLASS: Record<StatusTone, string> = { info: 'c-muted', success: 'c-ac
 // Same pattern as the server's check in server/contact.ts, so both sides agree.
 const EMAIL_PATTERN = /^[^\s@<>()[\]",;:\\]+@[^\s@<>()[\]",;:\\]+\.[^\s@<>()[\]",;:\\]+$/
 
-type RequiredField = 'name' | 'email'
-type FieldErrors = Record<RequiredField, string | null>
-const NO_ERRORS: FieldErrors = { name: null, email: null }
+type TextField = 'name' | 'email' | 'location' | 'sector' | 'message'
+type FieldErrors = Record<TextField | 'services', string | null>
+const NO_ERRORS: FieldErrors = { name: null, email: null, location: null, sector: null, message: null, services: null }
 
-/** Each required field's check, taking the trimmed value and returning its error, if any. */
-const FIELD_CHECKS: Record<RequiredField, (value: string) => string | null> = {
+/** Each text field's check, taking the trimmed value and returning its error, if any. */
+const FIELD_CHECKS: Record<TextField, (value: string) => string | null> = {
   name: (v) => (v ? null : 'Name is required.'),
   email: (v) => {
     if (!v) return 'Email is required.'
     return EMAIL_PATTERN.test(v) ? null : 'Please enter a valid email address.'
   },
+  location: (v) => (v ? null : 'Location is required.'),
+  sector: (v) => (v ? null : 'Please select a sector.'),
+  message: (v) => (v ? null : 'Please tell us about the project.'),
 }
 
-/** Phone is optional: only a non-empty, invalid entry is an error. */
-const phoneError = (phone: PhoneValue | null): string | null =>
-  phone && !phone.isEmpty && !phone.isValid ? PHONE_ERROR : null
+/** Form order, so the first invalid field can be focused. */
+const FIELD_ORDER: { key: TextField | 'phone' | 'services'; id: string }[] = [
+  { key: 'name', id: 'f-name' },
+  { key: 'email', id: 'f-email' },
+  { key: 'phone', id: 'f-phone' },
+  { key: 'location', id: 'f-loc' },
+  { key: 'sector', id: 'f-sector' },
+  { key: 'services', id: 'f-svc-0' },
+  { key: 'message', id: 'f-msg' },
+]
+
+/**
+ * An empty phone is reported only when `requireEntry` is set (on submit), so
+ * tabbing through the field doesn't flag it before the visitor has typed.
+ */
+const phoneError = (phone: PhoneValue | null, requireEntry: boolean): string | null => {
+  if (!phone || phone.isEmpty) return requireEntry ? PHONE_REQUIRED : null
+  return phone.isValid ? null : PHONE_ERROR
+}
 
 export default function StartAProject() {
   const [services, setServices] = useState<string[]>([])
@@ -57,20 +78,24 @@ export default function StartAProject() {
 
   const onPhoneChange = (value: PhoneValue): void => {
     setPhone(value)
-    // Clear a shown error as soon as the entry becomes acceptable.
-    if (!phoneError(value)) setPhoneMsg(null)
+    // Clear a shown error once the entry is acceptable, or once typing starts
+    // after a "required" error (an invalid number is reported again on blur).
+    if (value.isValid || (!value.isEmpty && phoneMsg === PHONE_REQUIRED)) setPhoneMsg(null)
   }
 
-  /** Re-checks a required field that is showing an error, so it clears once corrected. */
-  const onRequiredChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const field = e.target.name as RequiredField
+  /** Re-checks a field that is showing an error, so it clears once corrected. */
+  const onFieldChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>): void => {
+    const field = e.target.name as TextField
     if (!fieldErrors[field]) return
     const message = FIELD_CHECKS[field](e.target.value.trim())
     setFieldErrors((prev) => ({ ...prev, [field]: message }))
   }
 
-  const toggleService = (value: string): void =>
-    setServices((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
+  const toggleService = (value: string): void => {
+    const next = services.includes(value) ? services.filter((v) => v !== value) : [...services, value]
+    setServices(next)
+    if (fieldErrors.services && next.length) setFieldErrors((prev) => ({ ...prev, services: null }))
+  }
 
   /**
    * Posts the enquiry to /api/contact, which verifies the Turnstile token and
@@ -80,19 +105,30 @@ export default function StartAProject() {
     e.preventDefault()
     if (sendingRef.current) return
     const form = new FormData(e.currentTarget)
-    const name = (form.get('name') || '').toString().trim()
-    const email = (form.get('email') || '').toString().trim()
+    const value = (key: TextField): string => (form.get(key) || '').toString().trim()
+    const name = value('name')
+    const email = value('email')
+    const location = value('location')
+    const sector = value('sector')
+    const message = value('message')
 
     // Check every field at once so each shows its own error, then focus the first one.
-    const errors: FieldErrors = { name: FIELD_CHECKS.name(name), email: FIELD_CHECKS.email(email) }
-    const phoneMessage = phoneError(phone)
+    const errors: FieldErrors = {
+      name: FIELD_CHECKS.name(name),
+      email: FIELD_CHECKS.email(email),
+      location: FIELD_CHECKS.location(location),
+      sector: FIELD_CHECKS.sector(sector),
+      message: FIELD_CHECKS.message(message),
+      services: services.length ? null : SERVICES_REQUIRED,
+    }
+    const phoneMessage = phoneError(phone, true)
     setFieldErrors(errors)
     setPhoneMsg(phoneMessage)
 
-    const firstInvalid = errors.name ? 'f-name' : errors.email ? 'f-email' : phoneMessage ? 'f-phone' : null
+    const firstInvalid = FIELD_ORDER.find(({ key }) => (key === 'phone' ? phoneMessage : errors[key]))
     if (firstInvalid) {
       setStatus(null)
-      document.getElementById(firstInvalid)?.focus()
+      document.getElementById(firstInvalid.id)?.focus()
       return
     }
 
@@ -105,10 +141,10 @@ export default function StartAProject() {
       name,
       email,
       phone: (form.get('phone') || '').toString(),
-      location: (form.get('location') || '').toString(),
-      sector: (form.get('sector') || '').toString(),
+      location,
+      sector,
       services,
-      message: (form.get('message') || '').toString(),
+      message,
       turnstileToken: token ?? '',
     }
 
@@ -280,7 +316,7 @@ export default function StartAProject() {
                         type="text"
                         placeholder="Full name"
                         required
-                        onChange={onRequiredChange}
+                        onChange={onFieldChange}
                         aria-invalid={fieldErrors.name ? true : undefined}
                         aria-describedby={fieldErrors.name ? 'f-name-err' : undefined}
                       />
@@ -300,7 +336,7 @@ export default function StartAProject() {
                         type="email"
                         placeholder="you@company.com"
                         required
-                        onChange={onRequiredChange}
+                        onChange={onFieldChange}
                         aria-invalid={fieldErrors.email ? true : undefined}
                         aria-describedby={fieldErrors.email ? 'f-email-err' : undefined}
                       />
@@ -314,36 +350,74 @@ export default function StartAProject() {
 
                   <div className="form-two">
                     <div className="field">
-                      <label htmlFor="f-phone">Phone</label>
+                      <label htmlFor="f-phone">
+                        Phone <span className="c-accent">*</span>
+                      </label>
                       <PhoneField
                         id="f-phone"
                         name="phone"
                         defaultCountry="AE"
+                        required
                         error={phoneMsg}
                         onChange={onPhoneChange}
-                        onBlur={() => setPhoneMsg(phoneError(phone))}
+                        onBlur={() => setPhoneMsg(phoneError(phone, false))}
                       />
                     </div>
                     <div className="field">
-                      <label htmlFor="f-loc">Location</label>
-                      <input id="f-loc" name="location" type="text" placeholder="Emirate / area" />
+                      <label htmlFor="f-loc">
+                        Location <span className="c-accent">*</span>
+                      </label>
+                      <input
+                        id="f-loc"
+                        name="location"
+                        type="text"
+                        placeholder="Emirate / area"
+                        required
+                        onChange={onFieldChange}
+                        aria-invalid={fieldErrors.location ? true : undefined}
+                        aria-describedby={fieldErrors.location ? 'f-loc-err' : undefined}
+                      />
+                      {fieldErrors.location && (
+                        <p id="f-loc-err" className="field-error">
+                          {fieldErrors.location}
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div className="field">
-                    <label htmlFor="f-sector">Sector</label>
-                    <select id="f-sector" name="sector" defaultValue={SECTOR_OPTIONS[0]}>
+                    <label htmlFor="f-sector">
+                      Sector <span className="c-accent">*</span>
+                    </label>
+                    <select
+                      id="f-sector"
+                      name="sector"
+                      defaultValue=""
+                      required
+                      onChange={onFieldChange}
+                      aria-invalid={fieldErrors.sector ? true : undefined}
+                      aria-describedby={fieldErrors.sector ? 'f-sector-err' : undefined}
+                    >
+                      <option value="" disabled>Select a sector</option>
                       {SECTOR_OPTIONS.map((o) => <option key={o}>{o}</option>)}
                     </select>
+                    {fieldErrors.sector && (
+                      <p id="f-sector-err" className="field-error">
+                        {fieldErrors.sector}
+                      </p>
+                    )}
                   </div>
 
                   <div className="field">
-                    <fieldset>
-                      <legend className="field-legend">Service required</legend>
+                    <fieldset aria-describedby={fieldErrors.services ? 'f-svc-err' : undefined}>
+                      <legend className="field-legend">
+                        Service required <span className="c-accent">*</span>
+                      </legend>
                       <div className="opts">
-                        {SERVICE_OPTIONS.map((o) => (
+                        {SERVICE_OPTIONS.map((o, i) => (
                           <label className="opt" key={o}>
                             <input
+                              id={`f-svc-${i}`}
                               type="checkbox"
                               name="service"
                               value={o}
@@ -354,17 +428,33 @@ export default function StartAProject() {
                           </label>
                         ))}
                       </div>
+                      {fieldErrors.services && (
+                        <p id="f-svc-err" className="field-error">
+                          {fieldErrors.services}
+                        </p>
+                      )}
                     </fieldset>
                   </div>
 
                   <div className="field">
-                    <label htmlFor="f-msg">About the project</label>
+                    <label htmlFor="f-msg">
+                      About the project <span className="c-accent">*</span>
+                    </label>
                     <textarea
                       id="f-msg"
                       name="message"
                       rows={4}
                       placeholder="Space, scope, timeline"
+                      required
+                      onChange={onFieldChange}
+                      aria-invalid={fieldErrors.message ? true : undefined}
+                      aria-describedby={fieldErrors.message ? 'f-msg-err' : undefined}
                     ></textarea>
+                    {fieldErrors.message && (
+                      <p id="f-msg-err" className="field-error">
+                        {fieldErrors.message}
+                      </p>
+                    )}
                   </div>
 
                   {TURNSTILE_ENABLED && (

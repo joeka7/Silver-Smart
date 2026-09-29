@@ -109,7 +109,9 @@ and card primitives the listing needs are already used on that page.
 `StartAProject` posts the enquiry as JSON to `POST /api/contact`
 (`server/contact.ts`), which re-validates every field, verifies the Cloudflare
 Turnstile token, and sends the email over SMTP to `CONTACT_RECEIVER_EMAIL`, with
-the visitor as Reply-To. The form shows sending / sent / failed states in the
+the visitor as Reply-To. Every field is required (at least one service, and a
+phone number valid for its country); the form shows an error under each missing
+field, and the server rejects incomplete requests. The form shows sending / sent / failed states in the
 existing status line and clears only after a successful send. The footer's
 email field still composes a `mailto:`.
 
