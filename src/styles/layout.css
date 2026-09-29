@@ -1294,6 +1294,12 @@ body.mopen {
   background: var(--surface-container-high);
   border-color: var(--primary-container);
 }
+/* Matches the phone field's invalid state; stays marked while focused. */
+.field > input[aria-invalid='true'],
+.field > select[aria-invalid='true'],
+.field > textarea[aria-invalid='true'] {
+  border-color: var(--primary);
+}
 /* Browsers paint autofilled fields with their own light background, which
    can't be overridden directly; delaying the colour change indefinitely keeps
    each field's own background (including the phone input's transparent one). */
@@ -1509,7 +1515,8 @@ body.mopen {
   background: transparent;
 }
 
-.phone-error {
+.phone-error,
+.field-error {
   margin-top: 0.35rem;
   font-family: var(--font-mono);
   font-size: var(--label-technical);

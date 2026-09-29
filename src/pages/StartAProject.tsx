@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { ChangeEvent, FormEvent } from 'react'
 import { SectionIndex, Button, TextLink, SocialIcon } from '@/components/ui'
 import { Masthead } from '@/components/sections'
 import { PhoneField, Turnstile, TURNSTILE_ENABLED } from '@/components/forms'
@@ -18,6 +18,22 @@ const VERIFY_ERROR = 'The security check could not load. Please refresh the page
 type StatusTone = 'info' | 'success' | 'error'
 const TONE_CLASS: Record<StatusTone, string> = { info: 'c-muted', success: 'c-accent', error: 'c-primary' }
 
+// Same pattern as the server's check in server/contact.ts, so both sides agree.
+const EMAIL_PATTERN = /^[^\s@<>()[\]",;:\\]+@[^\s@<>()[\]",;:\\]+\.[^\s@<>()[\]",;:\\]+$/
+
+type RequiredField = 'name' | 'email'
+type FieldErrors = Record<RequiredField, string | null>
+const NO_ERRORS: FieldErrors = { name: null, email: null }
+
+/** Each required field's check, taking the trimmed value and returning its error, if any. */
+const FIELD_CHECKS: Record<RequiredField, (value: string) => string | null> = {
+  name: (v) => (v ? null : 'Name is required.'),
+  email: (v) => {
+    if (!v) return 'Email is required.'
+    return EMAIL_PATTERN.test(v) ? null : 'Please enter a valid email address.'
+  },
+}
+
 /** Phone is optional: only a non-empty, invalid entry is an error. */
 const phoneError = (phone: PhoneValue | null): string | null =>
   phone && !phone.isEmpty && !phone.isValid ? PHONE_ERROR : null
@@ -27,6 +43,7 @@ export default function StartAProject() {
   const [status, setStatus] = useState<{ text: string; tone: StatusTone } | null>(null)
   const [phone, setPhone] = useState<PhoneValue | null>(null)
   const [phoneMsg, setPhoneMsg] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>(NO_ERRORS)
   const [sending, setSending] = useState(false)
   // A ref as well as state, so a second click before re-render can't send twice.
   const sendingRef = useRef(false)
@@ -44,6 +61,14 @@ export default function StartAProject() {
     if (!phoneError(value)) setPhoneMsg(null)
   }
 
+  /** Re-checks a required field that is showing an error, so it clears once corrected. */
+  const onRequiredChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const field = e.target.name as RequiredField
+    if (!fieldErrors[field]) return
+    const message = FIELD_CHECKS[field](e.target.value.trim())
+    setFieldErrors((prev) => ({ ...prev, [field]: message }))
+  }
+
   const toggleService = (value: string): void =>
     setServices((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
 
@@ -58,15 +83,16 @@ export default function StartAProject() {
     const name = (form.get('name') || '').toString().trim()
     const email = (form.get('email') || '').toString().trim()
 
-    if (!name || !email) {
-      info('Please add your name and email so we can reply.')
-      return
-    }
+    // Check every field at once so each shows its own error, then focus the first one.
+    const errors: FieldErrors = { name: FIELD_CHECKS.name(name), email: FIELD_CHECKS.email(email) }
+    const phoneMessage = phoneError(phone)
+    setFieldErrors(errors)
+    setPhoneMsg(phoneMessage)
 
-    if (phoneError(phone)) {
-      setPhoneMsg(PHONE_ERROR)
-      info('Please check the phone number.')
-      document.getElementById('f-phone')?.focus()
+    const firstInvalid = errors.name ? 'f-name' : errors.email ? 'f-email' : phoneMessage ? 'f-phone' : null
+    if (firstInvalid) {
+      setStatus(null)
+      document.getElementById(firstInvalid)?.focus()
       return
     }
 
@@ -103,6 +129,7 @@ export default function StartAProject() {
         setServices([])
         setPhone(null)
         setPhoneMsg(null)
+        setFieldErrors(NO_ERRORS)
         setToken(null)
         setFormKey((k) => k + 1)
         setStatus({ text: 'Thank you — your request has been sent. We will reply by email.', tone: 'success' })
@@ -247,13 +274,41 @@ export default function StartAProject() {
                       <label htmlFor="f-name">
                         Name <span className="c-accent">*</span>
                       </label>
-                      <input id="f-name" name="name" type="text" placeholder="Full name" required />
+                      <input
+                        id="f-name"
+                        name="name"
+                        type="text"
+                        placeholder="Full name"
+                        required
+                        onChange={onRequiredChange}
+                        aria-invalid={fieldErrors.name ? true : undefined}
+                        aria-describedby={fieldErrors.name ? 'f-name-err' : undefined}
+                      />
+                      {fieldErrors.name && (
+                        <p id="f-name-err" className="field-error">
+                          {fieldErrors.name}
+                        </p>
+                      )}
                     </div>
                     <div className="field">
                       <label htmlFor="f-email">
                         Email <span className="c-accent">*</span>
                       </label>
-                      <input id="f-email" name="email" type="email" placeholder="you@company.com" required />
+                      <input
+                        id="f-email"
+                        name="email"
+                        type="email"
+                        placeholder="you@company.com"
+                        required
+                        onChange={onRequiredChange}
+                        aria-invalid={fieldErrors.email ? true : undefined}
+                        aria-describedby={fieldErrors.email ? 'f-email-err' : undefined}
+                      />
+                      {fieldErrors.email && (
+                        <p id="f-email-err" className="field-error">
+                          {fieldErrors.email}
+                        </p>
+                      )}
                     </div>
                   </div>
 
