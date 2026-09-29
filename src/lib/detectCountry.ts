@@ -276,6 +276,22 @@ const LEGACY: Record<string, string> = {
   'Africa/Asmera': 'ER',
   'America/Godthab': 'GL',
   'America/Buenos_Aires': 'AR',
+  'America/Catamarca': 'AR',
+  'America/Cordoba': 'AR',
+  'America/Jujuy': 'AR',
+  'America/Mendoza': 'AR',
+  'America/Coral_Harbour': 'CA',
+  'America/Montreal': 'CA',
+  'America/Nipigon': 'CA',
+  'America/Pangnirtung': 'CA',
+  'America/Rainy_River': 'CA',
+  'America/Thunder_Bay': 'CA',
+  'America/Yellowknife': 'CA',
+  'Europe/Uzhgorod': 'UA',
+  'Europe/Zaporozhye': 'UA',
+  'Europe/Nicosia': 'CY',
+  'Australia/Currie': 'AU',
+  'Asia/Choibalsan': 'MN',
   'America/Indianapolis': 'US',
   'America/Louisville': 'US',
   'Pacific/Enderbury': 'KI',
@@ -293,28 +309,57 @@ for (const [zone, country] of Object.entries(LEGACY)) {
   if (SUPPORTED.has(country)) BY_ZONE.set(zone, country as CountryCode)
 }
 
+function zoneCountry(): CountryCode | undefined {
+  try {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    return zone ? BY_ZONE.get(zone) : undefined
+  } catch {
+    return undefined // Intl unavailable.
+  }
+}
+
+/** `navigator.languages` can be missing or empty (some webviews), so `navigator.language` is always tried too. */
+function browserLanguages(): string[] {
+  if (typeof navigator === 'undefined') return []
+  try {
+    return [...(navigator.languages ?? []), navigator.language].filter((t): t is string => typeof t === 'string' && t !== '')
+  } catch {
+    return []
+  }
+}
+
+/** Region subtag of a language tag, e.g. `en-GB` → `GB`, `zh-Hant-TW` → `TW`; `en` → undefined. */
+function regionOf(tag: string): string | undefined {
+  const normalized = tag.replace(/_/g, '-')
+  if (typeof Intl.Locale === 'function') {
+    try {
+      return new Intl.Locale(normalized).region
+    } catch {
+      return undefined // Malformed tag.
+    }
+  }
+  // Engines without Intl.Locale: language[-script]-REGION.
+  return /^[a-z]{2,3}(?:-[a-z]{4})?-([a-z]{2})(?:-|$)/i.exec(normalized)?.[1].toUpperCase()
+}
+
 /**
  * Best guess at the visitor's country, with no network call or permission prompt:
  * the device time zone first (it follows the device's location settings), then the
  * region in the browser's preferred languages. `null` when neither gives a supported country.
+ *
+ * Reads browser state, so call it at render time in the browser — never at module scope.
  */
 export function detectCountry(): CountryCode | null {
   try {
-    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    const fromZone = zone && BY_ZONE.get(zone)
+    const fromZone = zoneCountry()
     if (fromZone) return fromZone
-  } catch {
-    // Intl unavailable — fall through to the language hint.
-  }
-  const languages = typeof navigator === 'undefined' ? [] : (navigator.languages ?? [navigator.language])
-  for (const tag of languages) {
-    try {
+    for (const tag of browserLanguages()) {
       // Only an explicit region counts: `en` alone says nothing about where someone is.
-      const region = new Intl.Locale(tag).region
+      const region = regionOf(tag)
       if (region && SUPPORTED.has(region)) return region as CountryCode
-    } catch {
-      // Malformed tag — try the next one.
     }
+  } catch {
+    // Detection must never stop the form rendering; the caller's default applies.
   }
   return null
 }
