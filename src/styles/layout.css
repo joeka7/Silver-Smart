@@ -1395,7 +1395,7 @@ body.mopen {
 }
 
 /* Reserve the widget's height so the form doesn't jump when it renders
-   (65px normal/flexible, 140px compact on narrow phones). */
+   (65px normal, 140px compact on narrow phones). */
 .form-turnstile {
   min-height: 65px;
 }

@@ -87,8 +87,8 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
         widgetId.current = api.render(containerRef.current, {
           sitekey: SITE_KEY,
           theme: 'dark',
-          // `flexible` needs 300px; narrow phones get the compact square instead.
-          size: window.matchMedia('(max-width: 399px)').matches ? 'compact' : 'flexible',
+          // Fixed 300px widget; narrow phones get the compact square instead.
+          size: window.matchMedia('(max-width: 399px)').matches ? 'compact' : 'normal',
           callback: (token: string) => onTokenRef.current(token),
           'expired-callback': () => onTokenRef.current(null),
           'timeout-callback': () => onTokenRef.current(null),
