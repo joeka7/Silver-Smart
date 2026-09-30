@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { parsePhoneNumber } from 'libphonenumber-js/max'
 import type { Enquiry } from './contact.js'
 
@@ -11,11 +12,46 @@ import type { Enquiry } from './contact.js'
  * is ever rendered as markup.
  */
 
+export interface InlineAttachment {
+  filename: string
+  content: Buffer
+  contentType: string
+  contentDisposition: 'inline'
+  cid: string
+}
+
 export interface RenderedEmail {
   subject: string
   text: string
   html: string
+  attachments: InlineAttachment[]
 }
+
+// ── Logo ─────────────────────────────────────────────────────────────────────
+
+/**
+ * PNG copy of src/assets/images/logo.webp (87×96, shown at 44px wide for
+ * retina), sent as an inline CID attachment: no remote URL, no WebP for
+ * Outlook. Resolved from the compiled dist-server/ back to server/assets/.
+ */
+const LOGO_CID = 'silver-smart-logo'
+const LOGO_WIDTH = 44
+
+const LOGO: InlineAttachment | null = (() => {
+  try {
+    return {
+      filename: 'logo-email.png',
+      content: readFileSync(new URL('../server/assets/logo-email.png', import.meta.url)),
+      contentType: 'image/png',
+      contentDisposition: 'inline',
+      cid: LOGO_CID,
+    }
+  } catch {
+    // A missing logo must never block delivery; the header falls back to text.
+    console.warn('[contact] Email logo not found; using the text header.')
+    return null
+  }
+})()
 
 const BRAND = '#e8762b'
 const INK = '#1a1a1a'
@@ -135,7 +171,11 @@ function renderHtml(e: Enquiry, submittedAt: string, country: string): string {
           <td style="padding:32px 40px 0 40px;" class="px">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
-                <td style="font-family:${FONT};font-size:13px;line-height:18px;letter-spacing:4px;font-weight:700;color:${INK};">SILVER&nbsp;SMART</td>
+                <td style="font-family:${FONT};font-size:13px;line-height:18px;letter-spacing:4px;font-weight:700;color:${INK};">${
+                  LOGO
+                    ? `<img src="cid:${LOGO_CID}" width="${LOGO_WIDTH}" alt="Silver Smart" style="display:block;width:${LOGO_WIDTH}px;max-width:${LOGO_WIDTH}px;height:auto;border:0;outline:none;text-decoration:none;font-family:${FONT};font-size:13px;font-weight:700;color:${INK};">`
+                    : 'SILVER&nbsp;SMART'
+                }</td>
               </tr>
               <tr>
                 <td style="padding-top:24px;font-family:${FONT};font-size:24px;line-height:32px;font-weight:600;color:${INK};">New Project Inquiry</td>
@@ -270,5 +310,6 @@ export function renderEnquiryEmail(e: Enquiry, at: Date): RenderedEmail {
     subject: `New Project Inquiry from ${e.name} — Silver Smart`,
     text: renderText(e, submittedAt, country),
     html: renderHtml(e, submittedAt, country),
+    attachments: LOGO ? [LOGO] : [],
   }
 }

@@ -285,7 +285,7 @@ function createSmtpTransport() {
 
 async function deliver(e: Enquiry): Promise<void> {
   transporter ??= createSmtpTransport()
-  const { subject, text, html } = renderEnquiryEmail(e, new Date())
+  const { subject, text, html, attachments } = renderEnquiryEmail(e, new Date())
   await transporter.sendMail({
     from: { name: 'Silver Smart website', address: SMTP.user },
     to: RECEIVER,
@@ -293,6 +293,7 @@ async function deliver(e: Enquiry): Promise<void> {
     subject,
     text,
     html,
+    attachments,
   })
 }
 
