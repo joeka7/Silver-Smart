@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
+import { Check } from 'lucide-react'
 import { SectionIndex, Button, TextLink, SocialIcon } from '@/components/ui'
 import { Masthead } from '@/components/sections'
 import { PhoneField, Turnstile, TURNSTILE_ENABLED } from '@/components/forms'
@@ -16,9 +17,12 @@ const SERVICES_REQUIRED = 'Please select at least one service.'
 const SEND_ERROR = `We could not send your request. Please try again, or email ${CONTACT.email}.`
 const VERIFY_PENDING = 'Please complete the security check, then send again.'
 const VERIFY_ERROR = 'The security check could not load. Please refresh the page and try again.'
+const SUCCESS_TITLE = 'Request Sent Successfully'
+const SUCCESS_MESSAGE =
+  'Thank you for contacting Silver Smart. Your request has been received, and our team will get back to you by email shortly.'
 
-type StatusTone = 'info' | 'success' | 'error'
-const TONE_CLASS: Record<StatusTone, string> = { info: 'c-muted', success: 'c-accent', error: 'c-primary' }
+type StatusTone = 'info' | 'error'
+const TONE_CLASS: Record<StatusTone, string> = { info: 'c-muted', error: 'c-primary' }
 
 // Same pattern as the server's check in server/contact.ts, so both sides agree.
 const EMAIL_PATTERN = /^[^\s@<>()[\]",;:\\]+@[^\s@<>()[\]",;:\\]+\.[^\s@<>()[\]",;:\\]+$/
@@ -71,8 +75,20 @@ export default function StartAProject() {
   const [token, setToken] = useState<string | null>(null)
   const [turnstileError, setTurnstileError] = useState(false)
   const turnstileRef = useRef<TurnstileHandle>(null)
-  // Bumped after a successful send to remount the form, clearing every field.
-  const [formKey, setFormKey] = useState(0)
+  // Set once /api/contact confirms the send: the form unmounts and the success
+  // state takes its place. Showing the form again remounts it, clearing every
+  // field and rendering a fresh Turnstile widget.
+  const [sent, setSent] = useState(false)
+  const successHeadingRef = useRef<HTMLHeadingElement>(null)
+  // Only a visitor action moves focus, never the first render.
+  const moveFocus = useRef(false)
+
+  useEffect(() => {
+    if (!moveFocus.current) return
+    moveFocus.current = false
+    if (sent) successHeadingRef.current?.focus()
+    else document.getElementById('f-name')?.focus()
+  }, [sent])
 
   const info = (text: string): void => setStatus({ text, tone: 'info' })
 
@@ -167,8 +183,9 @@ export default function StartAProject() {
         setPhoneMsg(null)
         setFieldErrors(NO_ERRORS)
         setToken(null)
-        setFormKey((k) => k + 1)
-        setStatus({ text: 'Thank you — your request has been sent. We will reply by email.', tone: 'success' })
+        setStatus(null)
+        moveFocus.current = true
+        setSent(true)
       } else {
         setStatus({ text: data?.error || SEND_ERROR, tone: 'error' })
         turnstileRef.current?.reset()
@@ -180,6 +197,11 @@ export default function StartAProject() {
       sendingRef.current = false
       setSending(false)
     }
+  }
+
+  const sendAnother = (): void => {
+    moveFocus.current = true
+    setSent(false)
   }
 
   return (
@@ -304,184 +326,204 @@ export default function StartAProject() {
                   </div>
                 </div>
 
-                <form key={formKey} className="form" id="ssform" noValidate onSubmit={onSubmit}>
-                  <div className="form-two">
-                    <div className="field">
-                      <label htmlFor="f-name">
-                        Name <span className="c-accent">*</span>
-                      </label>
-                      <input
-                        id="f-name"
-                        name="name"
-                        type="text"
-                        placeholder="Full name"
-                        required
-                        onChange={onFieldChange}
-                        aria-invalid={fieldErrors.name ? true : undefined}
-                        aria-describedby={fieldErrors.name ? 'f-name-err' : undefined}
-                      />
-                      {fieldErrors.name && (
-                        <p id="f-name-err" className="field-error">
-                          {fieldErrors.name}
-                        </p>
-                      )}
-                    </div>
-                    <div className="field">
-                      <label htmlFor="f-email">
-                        Email <span className="c-accent">*</span>
-                      </label>
-                      <input
-                        id="f-email"
-                        name="email"
-                        type="email"
-                        placeholder="you@company.com"
-                        required
-                        onChange={onFieldChange}
-                        aria-invalid={fieldErrors.email ? true : undefined}
-                        aria-describedby={fieldErrors.email ? 'f-email-err' : undefined}
-                      />
-                      {fieldErrors.email && (
-                        <p id="f-email-err" className="field-error">
-                          {fieldErrors.email}
-                        </p>
-                      )}
-                    </div>
-                  </div>
+                {/* Kept mounted so screen readers announce the success message when it is set. */}
+                <p className="form-live" role="status">{sent ? `${SUCCESS_TITLE}. ${SUCCESS_MESSAGE}` : ''}</p>
 
-                  <div className="form-two">
-                    <div className="field">
-                      <label htmlFor="f-phone">
-                        Phone <span className="c-accent">*</span>
-                      </label>
-                      <PhoneField
-                        id="f-phone"
-                        name="phone"
-                        defaultCountry="AE"
-                        required
-                        error={phoneMsg}
-                        onChange={onPhoneChange}
-                        onBlur={() => setPhoneMsg(phoneError(phone, false))}
-                      />
-                    </div>
-                    <div className="field">
-                      <label htmlFor="f-loc">
-                        Location <span className="c-accent">*</span>
-                      </label>
-                      <input
-                        id="f-loc"
-                        name="location"
-                        type="text"
-                        placeholder="Emirate / area"
-                        required
-                        onChange={onFieldChange}
-                        aria-invalid={fieldErrors.location ? true : undefined}
-                        aria-describedby={fieldErrors.location ? 'f-loc-err' : undefined}
-                      />
-                      {fieldErrors.location && (
-                        <p id="f-loc-err" className="field-error">
-                          {fieldErrors.location}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="field">
-                    <label htmlFor="f-sector">
-                      Sector <span className="c-accent">*</span>
-                    </label>
-                    <select
-                      id="f-sector"
-                      name="sector"
-                      defaultValue=""
-                      required
-                      onChange={onFieldChange}
-                      aria-invalid={fieldErrors.sector ? true : undefined}
-                      aria-describedby={fieldErrors.sector ? 'f-sector-err' : undefined}
-                    >
-                      <option value="" disabled>Select a sector</option>
-                      {SECTOR_OPTIONS.map((o) => <option key={o}>{o}</option>)}
-                    </select>
-                    {fieldErrors.sector && (
-                      <p id="f-sector-err" className="field-error">
-                        {fieldErrors.sector}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="field">
-                    <fieldset aria-describedby={fieldErrors.services ? 'f-svc-err' : undefined}>
-                      <legend className="field-legend">
-                        Service required <span className="c-accent">*</span>
-                      </legend>
-                      <div className="opts">
-                        {SERVICE_OPTIONS.map((o, i) => (
-                          <label className="opt" key={o}>
-                            <input
-                              id={`f-svc-${i}`}
-                              type="checkbox"
-                              name="service"
-                              value={o}
-                              checked={services.includes(o)}
-                              onChange={() => toggleService(o)}
-                            />
-                            <span>{o}</span>
-                          </label>
-                        ))}
-                      </div>
-                      {fieldErrors.services && (
-                        <p id="f-svc-err" className="field-error">
-                          {fieldErrors.services}
-                        </p>
-                      )}
-                    </fieldset>
-                  </div>
-
-                  <div className="field">
-                    <label htmlFor="f-msg">
-                      About the project <span className="c-accent">*</span>
-                    </label>
-                    <textarea
-                      id="f-msg"
-                      name="message"
-                      rows={4}
-                      placeholder="Space, scope, timeline"
-                      required
-                      onChange={onFieldChange}
-                      aria-invalid={fieldErrors.message ? true : undefined}
-                      aria-describedby={fieldErrors.message ? 'f-msg-err' : undefined}
-                    ></textarea>
-                    {fieldErrors.message && (
-                      <p id="f-msg-err" className="field-error">
-                        {fieldErrors.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {TURNSTILE_ENABLED && (
-                    <Turnstile
-                      ref={turnstileRef}
-                      onToken={(t) => {
-                        setToken(t)
-                        if (t) setTurnstileError(false)
-                      }}
-                      onError={() => setTurnstileError(true)}
-                    />
-                  )}
-
-                  <div className="form-submit">
-                    <Button type="submit" disabled={sending} aria-busy={sending}>Send request</Button>
-                    <p className={`t-label ${TONE_CLASS[status?.tone ?? 'info']}`} id="ssnote" role="status">
-                      {status?.text || <>Or email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></>}
-                    </p>
-                  </div>
-
-                  <div className="form-note">
-                    <span>
-                      Tell us about the property, the brief and the timeline — the same team that designs the space is
-                      accountable for building and maintaining it.
+                {sent ? (
+                  <div className="form-success">
+                    <span className="form-success-icon" aria-hidden="true">
+                      <Check size={24} strokeWidth={1.75} />
                     </span>
+                    <h3 ref={successHeadingRef} tabIndex={-1} className="t-md form-success-title">
+                      {SUCCESS_TITLE}
+                    </h3>
+                    <p className="t-body c-dim form-success-text">{SUCCESS_MESSAGE}</p>
+                    <button type="button" className="tlink form-success-action" onClick={sendAnother}>
+                      <span className="tlink-rule" aria-hidden="true"></span>
+                      <span>Send Another Request</span>
+                      <span className="arrow" aria-hidden="true">&#8594;</span>
+                    </button>
                   </div>
-                </form>
+                ) : (
+                  <form className="form" id="ssform" noValidate onSubmit={onSubmit}>
+                    <div className="form-two">
+                      <div className="field">
+                        <label htmlFor="f-name">
+                          Name <span className="c-accent">*</span>
+                        </label>
+                        <input
+                          id="f-name"
+                          name="name"
+                          type="text"
+                          placeholder="Full name"
+                          required
+                          onChange={onFieldChange}
+                          aria-invalid={fieldErrors.name ? true : undefined}
+                          aria-describedby={fieldErrors.name ? 'f-name-err' : undefined}
+                        />
+                        {fieldErrors.name && (
+                          <p id="f-name-err" className="field-error">
+                            {fieldErrors.name}
+                          </p>
+                        )}
+                      </div>
+                      <div className="field">
+                        <label htmlFor="f-email">
+                          Email <span className="c-accent">*</span>
+                        </label>
+                        <input
+                          id="f-email"
+                          name="email"
+                          type="email"
+                          placeholder="you@company.com"
+                          required
+                          onChange={onFieldChange}
+                          aria-invalid={fieldErrors.email ? true : undefined}
+                          aria-describedby={fieldErrors.email ? 'f-email-err' : undefined}
+                        />
+                        {fieldErrors.email && (
+                          <p id="f-email-err" className="field-error">
+                            {fieldErrors.email}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="form-two">
+                      <div className="field">
+                        <label htmlFor="f-phone">
+                          Phone <span className="c-accent">*</span>
+                        </label>
+                        <PhoneField
+                          id="f-phone"
+                          name="phone"
+                          defaultCountry="AE"
+                          required
+                          error={phoneMsg}
+                          onChange={onPhoneChange}
+                          onBlur={() => setPhoneMsg(phoneError(phone, false))}
+                        />
+                      </div>
+                      <div className="field">
+                        <label htmlFor="f-loc">
+                          Location <span className="c-accent">*</span>
+                        </label>
+                        <input
+                          id="f-loc"
+                          name="location"
+                          type="text"
+                          placeholder="Emirate / area"
+                          required
+                          onChange={onFieldChange}
+                          aria-invalid={fieldErrors.location ? true : undefined}
+                          aria-describedby={fieldErrors.location ? 'f-loc-err' : undefined}
+                        />
+                        {fieldErrors.location && (
+                          <p id="f-loc-err" className="field-error">
+                            {fieldErrors.location}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="field">
+                      <label htmlFor="f-sector">
+                        Sector <span className="c-accent">*</span>
+                      </label>
+                      <select
+                        id="f-sector"
+                        name="sector"
+                        defaultValue=""
+                        required
+                        onChange={onFieldChange}
+                        aria-invalid={fieldErrors.sector ? true : undefined}
+                        aria-describedby={fieldErrors.sector ? 'f-sector-err' : undefined}
+                      >
+                        <option value="" disabled>Select a sector</option>
+                        {SECTOR_OPTIONS.map((o) => <option key={o}>{o}</option>)}
+                      </select>
+                      {fieldErrors.sector && (
+                        <p id="f-sector-err" className="field-error">
+                          {fieldErrors.sector}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="field">
+                      <fieldset aria-describedby={fieldErrors.services ? 'f-svc-err' : undefined}>
+                        <legend className="field-legend">
+                          Service required <span className="c-accent">*</span>
+                        </legend>
+                        <div className="opts">
+                          {SERVICE_OPTIONS.map((o, i) => (
+                            <label className="opt" key={o}>
+                              <input
+                                id={`f-svc-${i}`}
+                                type="checkbox"
+                                name="service"
+                                value={o}
+                                checked={services.includes(o)}
+                                onChange={() => toggleService(o)}
+                              />
+                              <span>{o}</span>
+                            </label>
+                          ))}
+                        </div>
+                        {fieldErrors.services && (
+                          <p id="f-svc-err" className="field-error">
+                            {fieldErrors.services}
+                          </p>
+                        )}
+                      </fieldset>
+                    </div>
+
+                    <div className="field">
+                      <label htmlFor="f-msg">
+                        About the project <span className="c-accent">*</span>
+                      </label>
+                      <textarea
+                        id="f-msg"
+                        name="message"
+                        rows={4}
+                        placeholder="Space, scope, timeline"
+                        required
+                        onChange={onFieldChange}
+                        aria-invalid={fieldErrors.message ? true : undefined}
+                        aria-describedby={fieldErrors.message ? 'f-msg-err' : undefined}
+                      ></textarea>
+                      {fieldErrors.message && (
+                        <p id="f-msg-err" className="field-error">
+                          {fieldErrors.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {TURNSTILE_ENABLED && (
+                      <Turnstile
+                        ref={turnstileRef}
+                        onToken={(t) => {
+                          setToken(t)
+                          if (t) setTurnstileError(false)
+                        }}
+                        onError={() => setTurnstileError(true)}
+                      />
+                    )}
+
+                    <div className="form-submit">
+                      <Button type="submit" disabled={sending} aria-busy={sending}>Send request</Button>
+                      <p className={`t-label ${TONE_CLASS[status?.tone ?? 'info']}`} id="ssnote" role="status">
+                        {status?.text || <>Or email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></>}
+                      </p>
+                    </div>
+
+                    <div className="form-note">
+                      <span>
+                        Tell us about the property, the brief and the timeline — the same team that designs the space is
+                        accountable for building and maintaining it.
+                      </span>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           </div>
