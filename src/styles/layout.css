@@ -1703,6 +1703,12 @@ body.mopen {
   flex-direction: column;
   gap: 0.25rem;
 }
+/* Size labels and links to their text, so a link's hit area and focus ring
+   end where its text does instead of spanning the panel. */
+.panel-row > .t-sm,
+.panel-row > .t-label {
+  width: fit-content;
+}
 .panel-row + .panel-row {
   margin-top: var(--space-md);
   padding-top: var(--space-md);
