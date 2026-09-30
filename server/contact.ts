@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { createTransport } from 'nodemailer'
 import { isValidPhoneNumber } from 'libphonenumber-js/max'
+import { renderEnquiryEmail } from './email.js'
 
 /**
  * POST /api/contact — the Start a Project enquiry.
@@ -169,7 +170,7 @@ function readBody(req: IncomingMessage): Promise<string> {
 
 // ── Validation ───────────────────────────────────────────────────────────────
 
-interface Enquiry {
+export interface Enquiry {
   name: string
   email: string
   phone: string
@@ -284,26 +285,14 @@ function createSmtpTransport() {
 
 async function deliver(e: Enquiry): Promise<void> {
   transporter ??= createSmtpTransport()
-  const lines = [
-    `Name: ${e.name}`,
-    `Email: ${e.email}`,
-    `Phone: ${e.phone}`,
-    `Location: ${e.location}`,
-    `Sector: ${e.sector}`,
-    `Service required: ${e.services.join(', ')}`,
-    '',
-    'About the project:',
-    e.message,
-    '',
-    '—',
-    `Sent from the Start a Project form on ${new Date().toISOString()}`,
-  ]
+  const { subject, text, html } = renderEnquiryEmail(e, new Date())
   await transporter.sendMail({
     from: { name: 'Silver Smart website', address: SMTP.user },
     to: RECEIVER,
     replyTo: { name: e.name, address: e.email },
-    subject: `Project enquiry — ${e.name}`,
-    text: lines.join('\n'),
+    subject,
+    text,
+    html,
   })
 }
 
